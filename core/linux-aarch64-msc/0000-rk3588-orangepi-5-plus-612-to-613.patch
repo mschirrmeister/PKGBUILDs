@@ -1,0 +1,221 @@
+--- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi	2025-01-02 10:34:26.000000000 +0100
++++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi	2024-12-29 22:15:45.000000000 +0100
+@@ -1370,6 +1370,47 @@
+ 		status = "disabled";
+ 	};
+ 
++	hdmi0: hdmi@fde80000 {
++		compatible = "rockchip,rk3588-dw-hdmi-qp";
++		reg = <0x0 0xfde80000 0x0 0x20000>;
++		clocks = <&cru PCLK_HDMITX0>,
++			 <&cru CLK_HDMITX0_EARC>,
++			 <&cru CLK_HDMITX0_REF>,
++			 <&cru MCLK_I2S5_8CH_TX>,
++			 <&cru CLK_HDMIHDP0>,
++			 <&cru HCLK_VO1>;
++		clock-names = "pclk", "earc", "ref", "aud", "hdp", "hclk_vo1";
++		interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH 0>;
++		interrupt-names = "avp", "cec", "earc", "main", "hpd";
++		phys = <&hdptxphy_hdmi0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&hdmim0_tx0_cec &hdmim0_tx0_hpd
++			     &hdmim0_tx0_scl &hdmim0_tx0_sda>;
++		power-domains = <&power RK3588_PD_VO1>;
++		resets = <&cru SRST_HDMITX0_REF>, <&cru SRST_HDMIHDP0>;
++		reset-names = "ref", "hdp";
++		rockchip,grf = <&sys_grf>;
++		rockchip,vo-grf = <&vo1_grf>;
++		status = "disabled";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			hdmi0_in: port@0 {
++				reg = <0>;
++			};
++
++			hdmi0_out: port@1 {
++				reg = <1>;
++			};
++		};
++	};
++
+ 	qos_gpu_m0: qos@fdf35000 {
+ 		compatible = "rockchip,rk3588-qos", "syscon";
+ 		reg = <0x0 0xfdf35000 0x0 0x20>;
+
+--- a/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts	2025-01-05 20:54:08.239275885 +0100
++++ b/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts	2025-01-05 20:53:57.591418760 +0100
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/leds/common.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
++#include <dt-bindings/soc/rockchip,vop2.h>
+ #include <dt-bindings/usb/pd.h>
+ #include "rk3588.dtsi"
+ 
+@@ -85,6 +86,17 @@
+ 		};
+ 	};
+ 
++	hdmi0-con {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi0_con_in: endpoint {
++				remote-endpoint = <&hdmi0_out_con>;
++			};
++		};
++	};
++
+ 	fan: pwm-fan {
+ 		compatible = "pwm-fan";
+ 		cooling-levels = <0 70 75 80 100>;
+@@ -120,7 +132,7 @@
+ 		simple-audio-card,aux-devs = <&speaker_amp>, <&headphone_amp>;
+ 		simple-audio-card,format = "i2s";
+ 		simple-audio-card,mclk-fs = <256>;
+-		simple-audio-card,hp-det-gpio = <&gpio1 RK_PD3 GPIO_ACTIVE_LOW>;
++		simple-audio-card,hp-det-gpios = <&gpio1 RK_PD3 GPIO_ACTIVE_LOW>;
+ 		simple-audio-card,bitclock-master = <&daicpu>;
+ 		simple-audio-card,frame-master = <&daicpu>;
+ 		/*TODO: SARADC_IN3 is used as MIC detection / key input */
+@@ -165,7 +177,7 @@
+ 		};
+ 	};
+ 
+-	vcc3v3_pcie30: vcc3v3-pcie30-regulator {
++	vcc3v3_pcie30: regulator-vcc3v3-pcie30 {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+ 		gpios = <&gpio2 RK_PB6 GPIO_ACTIVE_HIGH>;
+@@ -176,7 +188,7 @@
+ 		vin-supply = <&vcc5v0_sys>;
+ 	};
+ 
+-	vcc3v3_pcie_eth: vcc3v3-pcie-eth-regulator {
++	vcc3v3_pcie_eth: regulator-vcc3v3-pcie-eth {
+ 		compatible = "regulator-fixed";
+ 		gpios = <&gpio3 RK_PB4 GPIO_ACTIVE_LOW>;
+ 		regulator-name = "vcc3v3_pcie_eth";
+@@ -186,7 +198,7 @@
+ 		vin-supply = <&vcc5v0_sys>;
+ 	};
+ 
+-	vcc3v3_wf: vcc3v3-wf-regulator {
++	vcc3v3_wf: regulator-vcc3v3-wf {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+ 		gpios = <&gpio2 RK_PC5 GPIO_ACTIVE_HIGH>;
+@@ -197,7 +209,7 @@
+ 		vin-supply = <&vcc5v0_sys>;
+ 	};
+ 
+-	vcc5v0_sys: vcc5v0-sys-regulator {
++	vcc5v0_sys: regulator-vcc5v0-sys {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc5v0_sys";
+ 		regulator-always-on;
+@@ -206,7 +218,7 @@
+ 		regulator-max-microvolt = <5000000>;
+ 	};
+ 
+-	vcc5v0_usb20: vcc5v0-usb20-regulator {
++	vcc5v0_usb20: regulator-vcc5v0-usb20 {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+ 		gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_HIGH>;
+@@ -263,6 +275,31 @@
+ 	cpu-supply = <&vdd_cpu_lit_s0>;
+ };
+ 
++&gpu {
++	mali-supply = <&vdd_gpu_s0>;
++	status = "okay";
++};
++
++&hdmi0 {
++	status = "okay";
++};
++
++&hdmi0_in {
++	hdmi0_in_vp0: endpoint {
++		remote-endpoint = <&vp0_out_hdmi0>;
++	};
++};
++
++&hdmi0_out {
++	hdmi0_out_con: endpoint {
++		remote-endpoint = <&hdmi0_con_in>;
++	};
++};
++
++&hdptxphy_hdmi0 {
++	status = "okay";
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0m2_xfer>;
+@@ -357,6 +394,36 @@
+ 	status = "okay";
+ };
+ 
++&package_thermal {
++	polling-delay = <1000>;
++
++	cooling-maps {
++		map0 {
++			trip = <&package_fan0>;
++			cooling-device = <&fan THERMAL_NO_LIMIT 1>;
++		};
++
++		map1 {
++			trip = <&package_fan1>;
++			cooling-device = <&fan 2 THERMAL_NO_LIMIT>;
++		};
++	};
++
++	trips {
++		package_fan0: package-fan0 {
++			temperature = <55000>;
++			hysteresis = <2000>;
++			type = "active";
++		};
++
++		package_fan1: package-fan1 {
++			temperature = <65000>;
++			hysteresis = <2000>;
++			type = "active";
++		};
++	};
++};
++
+ /* phy1 - M.KEY socket */
+ &pcie2x1l0 {
+ 	reset-gpios = <&gpio4 RK_PA5 GPIO_ACTIVE_HIGH>;
+@@ -852,3 +919,18 @@
+ &usb_host1_ohci {
+ 	status = "okay";
+ };
++
++&vop_mmu {
++	status = "okay";
++};
++
++&vop {
++	status = "okay";
++};
++
++&vp0 {
++	vp0_out_hdmi0: endpoint@ROCKCHIP_VOP2_EP_HDMI0 {
++		reg = <ROCKCHIP_VOP2_EP_HDMI0>;
++		remote-endpoint = <&hdmi0_in_vp0>;
++	};
++};
