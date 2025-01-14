@@ -8,8 +8,8 @@ pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=6.12.8
-pkgrel=2
+pkgver=6.12.9
+pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
 license=('GPL2')
@@ -28,7 +28,7 @@ source=(
   '1003-rk3588-orangepi-5-max-bindings.patch'
   '1004-rk3588-orangepi-5-max.patch'
 )
-sha256sums=('2291da065ca04b715c89ee50362aec3f021a7414bc963f1b56736682c8122979'
+sha256sums=('87be0360df0931b340d2bac35161a548070fbc3a8c352c49e21e96666c26aeb4'
             '059a48dcf64491426da929dadf84f6ba40d8dfc949bc7970bef511f691b75c29'
             '0383afe5bea374475c75bd19ca0add3caa023b71d700fe54f742697cf16d83f7'
             'febb09d31b98d5416854a525c8d835da828a9ea28fa084e2e6feceaf4e2eaf33'
