@@ -3,15 +3,12 @@
 
 _desc="almost mainline but with MSC's patches, Rockchip"
 
-_rcver=6.13
-_rcrel=7
-
-pkgbase=linux-aarch64-msc-rc
+pkgbase=linux-aarch64-msc
 pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=${_rcver}.rc${_rcrel}
+pkgver=6.14.1
 pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
@@ -20,30 +17,19 @@ makedepends=( # Since we don't build the doc, most of the makedeps for other lin
   'kmod' 'bc' 'dtc' 'uboot-tools' 'pahole'
 )
 options=(!strip)
-_srcname="linux-${_rcver}-rc${_rcrel}"
+_srcname="linux-${pkgver}"
+_kernelname=${pkgbase#linux}
 source=(
-   "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/snapshot/${_srcname}.tar.gz"
+   "https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.xz"
   'config'
-  '1001-rk3588-orangepi-5-plus-enable-usb-30-ports.patch'
-  '1002-rk3588-orangepi-5-plus-refactor-common.patch'
-  '1003-rk3588-orangepi-5-max-bindings.patch'
-  '1004-rk3588-orangepi-5-max.patch'
 )
-sha256sums=('2ee49b0fd7d9b556dd226ca3882b0c0b1f5fb5bd29f6040e6286d9af10f966f0'
-            '47f97a845533c08b45134ba650fbaff5c611c7669a0415111e657763dad60a91'
-            'febb09d31b98d5416854a525c8d835da828a9ea28fa084e2e6feceaf4e2eaf33'
-            '501d9c3cde6dacd22aa5c23787ca1d97573c9a7169d1a6706f6bcc4da0562fdf'
-            'c062e6394b215052866e6cf30b5979f2ba8b33698c2c71d5d0bc24b66dffe561'
-            'e56a60dd48c63195d9aa90235da19e5146f6175ff29847e9f4600a8dea6b4fab')
+sha256sums=('5bf122d1879fd64fadf0cecfcd477957ebce1bc5931c14835ee0eda88463e407'
+            '588147147fd0544c6e0e2922d3089c46340d6737002d1ebe0d1fe11816784b0a')
 
 prepare() {
   cd "${_srcname}"
 
   echo "Patching kernel (stable patchset)..."
-  cat ../1001-rk3588-orangepi-5-plus-enable-usb-30-ports.patch | patch -p1
-  cat ../1002-rk3588-orangepi-5-plus-refactor-common.patch | patch -p1
-  cat ../1003-rk3588-orangepi-5-max-bindings.patch | patch -p1
-  cat ../1004-rk3588-orangepi-5-max.patch | patch -p1
 
   echo "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
