@@ -1,5 +1,5 @@
 pkgbase = linux-aarch64-msc
-	pkgver = 6.14.1
+	pkgver = 6.14.2
 	pkgrel = 1
 	url = https://kernel.org
 	arch = aarch64
@@ -10,9 +10,9 @@ pkgbase = linux-aarch64-msc
 	makedepends = uboot-tools
 	makedepends = pahole
 	options = !strip
-	source = https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.14.1.tar.xz
+	source = https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.14.2.tar.xz
 	source = config
-	sha256sums = 5bf122d1879fd64fadf0cecfcd477957ebce1bc5931c14835ee0eda88463e407
+	sha256sums = c5c682a354ea3190139357a57d34a79e5c37221ace823a938e10116b577a2e1b
 	sha256sums = 588147147fd0544c6e0e2922d3089c46340d6737002d1ebe0d1fe11816784b0a
 
 pkgname = linux-aarch64-msc
