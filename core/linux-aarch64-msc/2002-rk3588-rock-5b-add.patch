@@ -1,0 +1,125 @@
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+new file mode 100644
+index 0000000000000000000000000000000000000000..9407a7c9910ada1f6c803d2e15785a9cbd9bd655
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+@@ -0,0 +1,52 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++
++#include "rk3588-rock-5b.dtsi"
++
++/ {
++	model = "Radxa ROCK 5B";
++	compatible = "radxa,rock-5b", "rockchip,rk3588";
++};
++
++&sdio {
++	max-frequency = <200000000>;
++	no-sd;
++	no-mmc;
++	non-removable;
++	bus-width = <4>;
++	cap-sdio-irq;
++	disable-wp;
++	keep-power-in-suspend;
++	wakeup-source;
++	sd-uhs-sdr12;
++	sd-uhs-sdr25;
++	sd-uhs-sdr50;
++	sd-uhs-sdr104;
++	vmmc-supply = <&vcc3v3_pcie2x1l0>;
++	vqmmc-supply = <&vcc_1v8_s3>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdiom0_pins>;
++	status = "okay";
++};
++
++&uart6 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart6m1_xfer &uart6m1_ctsn &uart6m1_rtsn>;
++	status = "okay";
++};
++
++&pinctrl {
++	usb {
++		vcc5v0_host_en: vcc5v0-host-en {
++			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++};
++
++&vcc5v0_host {
++	enable-active-high;
++	gpio = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&vcc5v0_host_en>;
++};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
+index d22068475c5dc6cb885f878f3f527a66edf1ba70..dccb8492f9f0632abd96c3dafc723e01491abad5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
+@@ -8,9 +8,6 @@
+ #include "rk3588.dtsi"
+ 
+ / {
+-	model = "Radxa ROCK 5B";
+-	compatible = "radxa,rock-5b", "rockchip,rk3588";
+-
+ 	aliases {
+ 		mmc0 = &sdhci;
+ 		mmc1 = &sdmmc;
+@@ -139,10 +136,6 @@ vcc5v0_host: regulator-vcc5v0-host {
+ 		regulator-always-on;
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+-		enable-active-high;
+-		gpio = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&vcc5v0_host_en>;
+ 		vin-supply = <&vcc5v0_sys>;
+ 	};
+ 
+@@ -530,27 +523,6 @@ &sdmmc {
+ 	status = "okay";
+ };
+ 
+-&sdio {
+-	max-frequency = <200000000>;
+-	no-sd;
+-	no-mmc;
+-	non-removable;
+-	bus-width = <4>;
+-	cap-sdio-irq;
+-	disable-wp;
+-	keep-power-in-suspend;
+-	wakeup-source;
+-	sd-uhs-sdr12;
+-	sd-uhs-sdr25;
+-	sd-uhs-sdr50;
+-	sd-uhs-sdr104;
+-	vmmc-supply = <&vcc3v3_pcie2x1l0>;
+-	vqmmc-supply = <&vcc_1v8_s3>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&sdiom0_pins>;
+-	status = "okay";
+-};
+-
+ &sfc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&fspim2_pins>;
+@@ -565,12 +537,6 @@ flash@0 {
+ 	};
+ };
+ 
+-&uart6 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&uart6m1_xfer &uart6m1_ctsn &uart6m1_rtsn>;
+-	status = "okay";
+-};
+-
+ &spi2 {
+ 	status = "okay";
+ 	assigned-clocks = <&cru CLK_SPI2>;
+
