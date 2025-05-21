@@ -1,0 +1,16 @@
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 650fb833d96ef67ea1bba33c0767777378a38fa7..fe1fe8fe52fa3594a0da8e0263cb46949436a021 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -946,6 +946,11 @@ properties:
+           - const: radxa,rock-5b
+           - const: rockchip,rk3588
+ 
++      - description: Radxa ROCK 5B+
++        items:
++          - const: radxa,rock-5b-plus
++          - const: rockchip,rk3588
++
+       - description: Radxa ROCK 5C
+         items:
+           - const: radxa,rock-5c
