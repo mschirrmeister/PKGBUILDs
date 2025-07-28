@@ -3,7 +3,7 @@
 
 _desc="almost mainline but with MSC's patches, Rockchip"
 
-_rcver=6.15
+_rcver=6.16
 _rcrel=7
 
 pkgbase=linux-aarch64-msc-rc
@@ -24,29 +24,14 @@ _srcname="linux-${_rcver}-rc${_rcrel}"
 source=(
    "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/snapshot/${_srcname}.tar.gz"
   'config'
-  '2001-rk3588-rock-5b-rename.patch'
-  '2002-rk3588-rock-5b-add.patch'
-  '2003-rk3588-rock-5b-plus-add.patch'
-  '2004-rk3588-rock-5b-and-plus-add-usb-c.patch'
-  '2005-rk3588-rock-5b-plus-bindings.patch'
 )
-sha256sums=('09696d62fb75955ad30ca2c25d5ee23c622144ed6a0ecf705aca526cf00f0157'
-            'e4916f46ac8477c10a18faddafec9d6206901713efb16d6fdd5bbea5ed65256f'
-            'c612742cb241011cfc220531f34767ddd44b9f42030e442bdce44dce8e6f3efc'
-            'f8da637f1f11ceafa63dfb3df722895af38c95cc3dc1f67efe595b88f1bc8c11'
-            '6b57191105cd1b284c4c84b416c855962c94b01e031001c4e3e388e1ab7eb495'
-            '7b43d52a9ac9df50eb10516eb387ba67072a2c658a255498f76688ea73b9691f'
-            'eb4017c761669cce6e1742ad2797281dbff84dc15b916e6f2666d0e19537af7d')
+sha256sums=('a5a49e5012bd4f5814e52c00977b1311ec72e0654bfdfbef9695935685bc3509'
+            '47934b608098e5b042cd1c2b08c126dda55c46b7ea8db289d21e3e12c87cc772')
 
 prepare() {
   cd "${_srcname}"
 
   echo "Patching kernel (stable patchset)..."
-  cat ../2001-rk3588-rock-5b-rename.patch | patch -p1
-  cat ../2002-rk3588-rock-5b-add.patch | patch -p1
-  cat ../2003-rk3588-rock-5b-plus-add.patch | patch -p1
-  cat ../2004-rk3588-rock-5b-and-plus-add-usb-c.patch | patch -p1
-  cat ../2005-rk3588-rock-5b-plus-bindings.patch | patch -p1
 
   echo "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
@@ -60,6 +45,7 @@ build() {
   cd "${_srcname}"
 
   # get kernel version, which will be used later for modules
+  sed -i '/HAVE_GCC_PLUGINS/d' arch/arm64/Kconfig
   make olddefconfig prepare
   make -s kernelrelease > version
 
