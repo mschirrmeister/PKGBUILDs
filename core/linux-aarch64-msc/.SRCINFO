@@ -1,5 +1,5 @@
 pkgbase = linux-aarch64-msc
-	pkgver = 6.16.11
+	pkgver = 6.17.1
 	pkgrel = 1
 	url = https://kernel.org
 	arch = aarch64
@@ -10,10 +10,10 @@ pkgbase = linux-aarch64-msc
 	makedepends = uboot-tools
 	makedepends = pahole
 	options = !strip
-	source = https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.16.11.tar.xz
+	source = https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.17.1.tar.xz
 	source = config
-	sha256sums = 5f304f0c453d87ac765207359da4f5a733939d1595ef258f1809194fa18dba7b
-	sha256sums = 9b984e32fffd085c4316b6620e2481b0a13381070ac976f2603103ec2cd74488
+	sha256sums = a53dbe3f41491922a61f17c5cc551e88f544d5411aeb1c8c65c402795c4f4da0
+	sha256sums = e54d3ad8473eb61ea62da7f0ea73ce962a961ab2a309fd686f3b5a483dbf5ba5
 
 pkgname = linux-aarch64-msc
 	pkgdesc = The Linux Kernel and module - almost mainline but with MSC's patches, Rockchip
