@@ -8,7 +8,7 @@ pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=6.15.8
+pkgver=6.16.11
 pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
@@ -22,29 +22,14 @@ _kernelname=${pkgbase#linux}
 source=(
    "https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.xz"
   'config'
-  '2001-rk3588-rock-5b-rename.patch'
-  '2002-rk3588-rock-5b-add.patch'
-  '2003-rk3588-rock-5b-plus-add.patch'
-  '2004-rk3588-rock-5b-and-plus-add-usb-c.patch'
-  '2005-rk3588-rock-5b-plus-bindings.patch'
 )
-sha256sums=('d37e92bc16b962a3025df156647bdad90b2db4ff36c7a6137817fe81ef3f28a6'
-            '6f7cf91ea873fadf0672bdf17e5f9839c92d93edd23929a7f75a7b3f5fc5d477'
-            'c612742cb241011cfc220531f34767ddd44b9f42030e442bdce44dce8e6f3efc'
-            'f8da637f1f11ceafa63dfb3df722895af38c95cc3dc1f67efe595b88f1bc8c11'
-            '6b57191105cd1b284c4c84b416c855962c94b01e031001c4e3e388e1ab7eb495'
-            '7b43d52a9ac9df50eb10516eb387ba67072a2c658a255498f76688ea73b9691f'
-            'eb4017c761669cce6e1742ad2797281dbff84dc15b916e6f2666d0e19537af7d')
+sha256sums=('5f304f0c453d87ac765207359da4f5a733939d1595ef258f1809194fa18dba7b'
+            '9b984e32fffd085c4316b6620e2481b0a13381070ac976f2603103ec2cd74488')
 
 prepare() {
   cd "${_srcname}"
 
   echo "Patching kernel (stable patchset)..."
-  cat ../2001-rk3588-rock-5b-rename.patch | patch -p1
-  cat ../2002-rk3588-rock-5b-add.patch | patch -p1
-  cat ../2003-rk3588-rock-5b-plus-add.patch | patch -p1
-  cat ../2004-rk3588-rock-5b-and-plus-add-usb-c.patch | patch -p1
-  cat ../2005-rk3588-rock-5b-plus-bindings.patch | patch -p1
 
   echo "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
