@@ -3,7 +3,7 @@
 
 _desc="almost mainline but with MSC's patches, Rockchip"
 
-_rcver=6.16
+_rcver=6.17
 _rcrel=7
 
 pkgbase=linux-aarch64-msc-rc
@@ -25,8 +25,8 @@ source=(
    "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/snapshot/${_srcname}.tar.gz"
   'config'
 )
-sha256sums=('a5a49e5012bd4f5814e52c00977b1311ec72e0654bfdfbef9695935685bc3509'
-            '47934b608098e5b042cd1c2b08c126dda55c46b7ea8db289d21e3e12c87cc772')
+sha256sums=('a9fcbb10ac379dbacba636e2e330733317d4d0069770d5ac6a61132f23c7dc80'
+            '129e48d11a595644c95d905827d70e3468f6687fc979708df7ea07918cfc3842')
 
 prepare() {
   cd "${_srcname}"
