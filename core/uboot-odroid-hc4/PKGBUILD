@@ -1,0 +1,91 @@
+# U-Boot: ODROID-HC4
+# Maintainer: Marco Schirrmeister <mschirrmeister@gmail.com>
+
+pkgname=uboot-odroid-hc4-mainline
+pkgver=2021.07
+pkgrel=2
+pkgdesc="Mainline U-Boot for ODROID-HC4"
+arch=('aarch64')
+url="https://github.com/hardkernel/u-boot"
+license=('GPL')
+install=$pkgname.install
+depends=('uboot-tools')
+makedepends=('git' 'bc' 'qemu-user')
+backup=('boot/boot.ini')
+provides=('uboot')
+conflicts=('uboot')
+source=("ftp://ftp.denx.de/pub/u-boot/u-boot-${pkgver/rc/-rc}.tar.bz2"
+        "git+https://github.com/LibreELEC/amlogic-boot-fip.git")
+md5sums=('7afbe0ef070dc0e8e970c57a08e3f336'
+         'SKIP')
+
+build() {
+  # Path to the LibreELEC amlogic-boot-fip source directory where build scripts and proprietary binaries reside
+  _amlogic_fip_repo_dir="amlogic-boot-fip" # Name of the extracted LibreELEC amlogic-boot-fip source
+  _fip_board_dir="${_amlogic_fip_repo_dir}/odroid-hc4" # Specific board subdir inside amlogic-boot-fip
+
+  cd u-boot-${pkgver/rc/-rc}
+
+  unset CFLAGS CXXFLAGS CPPFLAGS LDFLAGS
+  export CROSS_COMPILE=
+
+  make distclean
+  make odroid-c4_defconfig
+  echo 'CONFIG_IDENT_STRING=" Manjaro ARM"' >> .config
+  make -j$(nproc) EXTRAVERSION=-${pkgrel}
+
+  cp u-boot.bin ../${_fip_board_dir}/bl33.bin
+
+  cd ../${_fip_board_dir} # Enter the LibreELEC FIP build context for odroid-c4
+
+  # Define the QEMU wrapper for the proprietary tool and the tool's relative path
+  # qemu-x86_64 should be in PATH. The -L is for x86_64 libs, ensure it's correct for your system.
+  # For Arch ARM, /usr/x86_64-linux-gnu/ is common, or sometimes it works without -L if setup correctly.
+  local QEMU_CMD="qemu-x86_64 -L /usr/x86_64-linux-gnu/" # Use local to keep it scoped
+  local AML_ENCRYPT_G12A_TOOL="./aml_encrypt_g12a" # The tool itself
+
+  # aml_encrypt_g12a is already in this directory due to git clone + cd. Just make executable.
+  chmod +x "${AML_ENCRYPT_G12A_TOOL}"
+
+  # Create dummy zero_tmp for blx_fix.sh
+  touch zero_tmp
+
+  # Ensure blx_fix.sh is executable (it should be part of the LibreELEC repo)
+  chmod +x ./blx_fix.sh
+
+  ./blx_fix.sh bl30.bin \
+             zero_tmp \
+             bl30_zero.bin \
+             bl301.bin \
+             bl301_zero.bin \
+             bl30_new.bin bl30
+
+  ./blx_fix.sh bl2.bin \
+             zero_tmp \
+             bl2_zero.bin \
+             acs.bin \
+             bl21_zero.bin \
+             bl2_new.bin bl2
+
+  # Now, the direct calls to aml_encrypt_g12a, prepending with QEMU_CMD
+  ${QEMU_CMD} ${AML_ENCRYPT_G12A_TOOL} --bl30sig --input bl30_new.bin          --output bl30_new.bin.g12a.enc --level v3
+  ${QEMU_CMD} ${AML_ENCRYPT_G12A_TOOL} --bl3sig  --input bl30_new.bin.g12a.enc --output bl30_new.bin.enc      --level v3 --type bl30
+  ${QEMU_CMD} ${AML_ENCRYPT_G12A_TOOL} --bl3sig  --input bl31.img              --output bl31.img.enc          --level v3 --type bl31
+  ${QEMU_CMD} ${AML_ENCRYPT_G12A_TOOL} --bl3sig  --input bl33.bin              --output bl33.bin.enc          --level v3 --type bl33 --compress lz4
+  ${QEMU_CMD} ${AML_ENCRYPT_G12A_TOOL} --bl2sig  --input bl2_new.bin           --output bl2.n.bin.sig
+
+  # Final bootmk command to create the complete FIP image
+  ${QEMU_CMD} ${AML_ENCRYPT_G12A_TOOL} --bootmk  --output u-boot.bin            --level v3 \
+                                     --bl2 bl2.n.bin.sig --bl30 bl30_new.bin.enc --bl31 bl31.img.enc --bl33 bl33.bin.enc \
+                                     --ddrfw1 ddr4_1d.fw   --ddrfw2 ddr4_2d.fw   --ddrfw3 ddr3_1d.fw     --ddrfw4 piei.fw \
+                                     --ddrfw5 lpddr4_1d.fw --ddrfw6 lpddr4_2d.fw --ddrfw7 diag_lpddr4.fw --ddrfw8 aml_ddr.fw
+
+  # Copy the final FIP image (u-boot.bin) out to srcdir
+  cp u-boot.bin "${srcdir}/u-boot.bin_final_fip"
+}
+
+# Install the final FIP
+package() {
+  mkdir -p "${pkgdir}"/boot/
+  cp "${srcdir}/u-boot.bin_final_fip" "${pkgdir}"/boot/u-boot.bin
+}

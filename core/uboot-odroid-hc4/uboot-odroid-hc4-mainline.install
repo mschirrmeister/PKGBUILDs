@@ -1,0 +1,41 @@
+flash_uboot() {
+  echo "A new U-Boot version needs to be flashed onto your install drive. Please use lsblk to determine your drive, before proceeding."
+    echo "You can do this by running:"
+    echo "# dd if=/boot/u-boot.bin of=/dev/mmcblkX conv=fsync,notrunc bs=512 seek=1"
+}
+
+create_config() {
+  mkdir -p /boot/extlinux/
+  echo 'label Arch Linux ARM
+    kernel /Image
+    initrd /initramfs-linux.img
+    FDT /dtbs/amlogic/meson-sm1-odroid-hc4.dtb
+    APPEND clk_ignore_unused no_console_suspend console=tty1 console=ttyAML0,115200n8 console=both rw root=PARTUUID=f102591f-02 earlycon=aml-uart,0xff803000 rootwait rootdelay=2 rootfstype=ext4 mminit_loglevel=4 fsck.repair=yes ignore_loglevel loglevel=8 consoleblank=0 panic=60 net.ifnames=0'> /boot/extlinux/extlinux.conf
+}
+
+## arg 1:  the new package version
+post_install() {
+  flash_uboot
+  if [ -f /boot/extlinux/extlinux.conf.pacsave ]; then
+  mv /boot/extlinux/extlinux.conf.pacsave /boot/extlinux/extlinux.conf
+  fi
+  if [ -f /boot/extlinux/extlinux.conf ]; then
+  echo "Keeping old extlinux.conf file..."
+  else
+    create_config
+  fi
+}
+
+## arg 1:  the new package version
+## arg 2:  the old package version
+post_upgrade() {
+  flash_uboot
+  if [ -f /boot/extlinux/extlinux.conf.pacsave ]; then
+  mv /boot/extlinux/extlinux.conf.pacsave /boot/extlinux/extlinux.conf
+  fi
+  if [ -f /boot/extlinux/extlinux.conf ]; then
+  echo "Keeping old extlinux.conf file..."
+  else
+    create_config
+  fi
+}
