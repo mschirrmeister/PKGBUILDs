@@ -2,7 +2,7 @@
 # Maintainer: Marco Schirrmeister <mschirrmeister@gmail.com>
 
 pkgname=uboot-odroid-hc4-mainline
-pkgver=2025.10
+pkgver=2025.07
 pkgrel=2
 pkgdesc="Mainline U-Boot for ODROID-HC4"
 arch=('aarch64')
@@ -16,7 +16,7 @@ provides=('uboot')
 conflicts=('uboot')
 source=("ftp://ftp.denx.de/pub/u-boot/u-boot-${pkgver/rc/-rc}.tar.bz2"
         "git+https://github.com/LibreELEC/amlogic-boot-fip.git")
-md5sums=('e46082f49c7b845d3146b4015fc8c34d'
+md5sums=('71570f5e1b5a81dd67e3082fb269f07d'
          'SKIP')
 
 build() {
