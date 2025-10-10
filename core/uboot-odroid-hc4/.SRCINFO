@@ -1,6 +1,6 @@
 pkgbase = uboot-odroid-hc4-mainline
 	pkgdesc = Mainline U-Boot for ODROID-HC4
-	pkgver = 2021.07
+	pkgver = 2025.07
 	pkgrel = 2
 	url = https://github.com/hardkernel/u-boot
 	install = uboot-odroid-hc4-mainline.install
@@ -13,9 +13,9 @@ pkgbase = uboot-odroid-hc4-mainline
 	provides = uboot
 	conflicts = uboot
 	backup = boot/boot.ini
-	source = ftp://ftp.denx.de/pub/u-boot/u-boot-2021.07.tar.bz2
+	source = ftp://ftp.denx.de/pub/u-boot/u-boot-2025.07.tar.bz2
 	source = git+https://github.com/LibreELEC/amlogic-boot-fip.git
-	md5sums = 7afbe0ef070dc0e8e970c57a08e3f336
+	md5sums = 71570f5e1b5a81dd67e3082fb269f07d
 	md5sums = SKIP
 
 pkgname = uboot-odroid-hc4-mainline
