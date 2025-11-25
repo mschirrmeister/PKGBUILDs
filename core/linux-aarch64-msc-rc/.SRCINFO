@@ -1,5 +1,5 @@
 pkgbase = linux-aarch64-msc-rc
-	pkgver = 6.17.rc7
+	pkgver = 6.18.rc7
 	pkgrel = 1
 	url = https://kernel.org
 	arch = aarch64
@@ -10,10 +10,10 @@ pkgbase = linux-aarch64-msc-rc
 	makedepends = uboot-tools
 	makedepends = pahole
 	options = !strip
-	source = https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/snapshot/linux-6.17-rc7.tar.gz
+	source = https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/snapshot/linux-6.18-rc7.tar.gz
 	source = config
-	sha256sums = a9fcbb10ac379dbacba636e2e330733317d4d0069770d5ac6a61132f23c7dc80
-	sha256sums = 129e48d11a595644c95d905827d70e3468f6687fc979708df7ea07918cfc3842
+	sha256sums = 4a2916f05a0ed9b771af99ce7710b007b618b93c158cd7549e02b80218afcc35
+	sha256sums = 2e29ba7787267320311285986eac9912cb1aeff8ee0861d321225e12f7a264de
 
 pkgname = linux-aarch64-msc-rc
 	pkgdesc = The Linux Kernel and module - almost mainline but with MSC's patches, Rockchip

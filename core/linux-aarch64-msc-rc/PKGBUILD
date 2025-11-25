@@ -3,7 +3,7 @@
 
 _desc="almost mainline but with MSC's patches, Rockchip"
 
-_rcver=6.17
+_rcver=6.18
 _rcrel=7
 
 pkgbase=linux-aarch64-msc-rc
@@ -25,8 +25,8 @@ source=(
    "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/snapshot/${_srcname}.tar.gz"
   'config'
 )
-sha256sums=('a9fcbb10ac379dbacba636e2e330733317d4d0069770d5ac6a61132f23c7dc80'
-            '129e48d11a595644c95d905827d70e3468f6687fc979708df7ea07918cfc3842')
+sha256sums=('4a2916f05a0ed9b771af99ce7710b007b618b93c158cd7549e02b80218afcc35'
+            '55e787b3a4ff4ecf24379f3d1e3cd62dcff566fac6ee083ae3fab9785650347b')
 
 prepare() {
   cd "${_srcname}"
@@ -111,11 +111,13 @@ _package-headers() {
   install -Dt "${_builddir}/arch/arm64" -m644 arch/arm64/Makefile
   cp -t "${_builddir}" -a scripts
 
+  # required when DEBUG_INFO_BTF_MODULES is enabled
+  install -Dt "${_builddir}/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
+
   echo "Installing headers..."
   cp -t "${_builddir}" -a include
   cp -t "${_builddir}/arch/arm64" -a arch/arm64/include
   install -Dt "${_builddir}/arch/arm64/kernel" -m644 arch/arm64/kernel/asm-offsets.s
-
 
   install -Dt "${_builddir}/drivers/md" -m644 drivers/md/*.h
   install -Dt "${_builddir}/net/mac80211" -m644 net/mac80211/*.h
