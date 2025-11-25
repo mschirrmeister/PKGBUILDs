@@ -12,7 +12,7 @@ pkgname=(
   "${pkgbase}-headers"
 )
 pkgver=${_rcver}.rc${_rcrel}
-pkgrel=1
+pkgrel=2
 arch=('aarch64')
 url="https://kernel.org"
 license=('GPL2')
@@ -24,14 +24,23 @@ _srcname="linux-${_rcver}-rc${_rcrel}"
 source=(
    "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/snapshot/${_srcname}.tar.gz"
   'config'
+  '0001-general-fix-mmc-signal-voltage-before-reboot.patch'
+  '0002-driver-power-meson64-reset.patch'
+  '0003-board-odroid-sm1-reset.patch'
 )
 sha256sums=('4a2916f05a0ed9b771af99ce7710b007b618b93c158cd7549e02b80218afcc35'
-            '55e787b3a4ff4ecf24379f3d1e3cd62dcff566fac6ee083ae3fab9785650347b')
+            '86e5be33e19b4e473f29110bcb576134c15e533c5272b91a93536814ed12347f'
+            '7bbedb7394cc00a0fe62b62638ebfb2d60a4846f9666a870c88ac8db98536a77'
+            '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
+            '1eb6cc0f5a656f7717356e75613eb49fa1f37379b5f6a8abc238da67a8a25e70')
 
 prepare() {
   cd "${_srcname}"
 
   echo "Patching kernel (stable patchset)..."
+  cat ../0001-general-fix-mmc-signal-voltage-before-reboot.patch | patch -p1
+  cat ../0002-driver-power-meson64-reset.patch | patch -p1
+  cat ../0003-board-odroid-sm1-reset.patch | patch -p1
 
   echo "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel

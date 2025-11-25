@@ -1,6 +1,6 @@
 pkgbase = linux-aarch64-msc-rc
 	pkgver = 6.18.rc7
-	pkgrel = 1
+	pkgrel = 2
 	url = https://kernel.org
 	arch = aarch64
 	license = GPL2
@@ -12,8 +12,14 @@ pkgbase = linux-aarch64-msc-rc
 	options = !strip
 	source = https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/snapshot/linux-6.18-rc7.tar.gz
 	source = config
+	source = 0001-general-fix-mmc-signal-voltage-before-reboot.patch
+	source = 0002-driver-power-meson64-reset.patch
+	source = 0003-board-odroid-sm1-reset.patch
 	sha256sums = 4a2916f05a0ed9b771af99ce7710b007b618b93c158cd7549e02b80218afcc35
-	sha256sums = 2e29ba7787267320311285986eac9912cb1aeff8ee0861d321225e12f7a264de
+	sha256sums = 86e5be33e19b4e473f29110bcb576134c15e533c5272b91a93536814ed12347f
+	sha256sums = 7bbedb7394cc00a0fe62b62638ebfb2d60a4846f9666a870c88ac8db98536a77
+	sha256sums = 8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389
+	sha256sums = 1eb6cc0f5a656f7717356e75613eb49fa1f37379b5f6a8abc238da67a8a25e70
 
 pkgname = linux-aarch64-msc-rc
 	pkgdesc = The Linux Kernel and module - almost mainline but with MSC's patches, Rockchip
