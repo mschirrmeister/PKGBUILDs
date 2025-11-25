@@ -9,7 +9,7 @@ pkgname=(
   "${pkgbase}-headers"
 )
 pkgver=6.17.8
-pkgrel=3
+pkgrel=4
 arch=('aarch64')
 url="https://kernel.org"
 license=('GPL2')
@@ -27,7 +27,7 @@ source=(
   '0003-board-odroid-sm1-reset.patch'
 )
 sha256sums=('5a8de64a75fca706c01c6c0a77cf75a74618439db195e25f1f0268af6b2fb1da'
-            '1112fff96d11ee05bcdffe88ad1de3c4deee25cd302646e5820d196e9304cbf8'
+            '7b87d6df34afcaa7a4c06866d1c47b84f84ac839045bd57fc49fe6da8b05c6de'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
             '1eb6cc0f5a656f7717356e75613eb49fa1f37379b5f6a8abc238da67a8a25e70')
