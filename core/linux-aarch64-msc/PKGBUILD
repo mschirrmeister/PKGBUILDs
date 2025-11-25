@@ -8,7 +8,7 @@ pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=6.17.1
+pkgver=6.17.8
 pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
@@ -23,8 +23,8 @@ source=(
    "https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.xz"
   'config'
 )
-sha256sums=('a53dbe3f41491922a61f17c5cc551e88f544d5411aeb1c8c65c402795c4f4da0'
-            'e54d3ad8473eb61ea62da7f0ea73ce962a961ab2a309fd686f3b5a483dbf5ba5')
+sha256sums=('5a8de64a75fca706c01c6c0a77cf75a74618439db195e25f1f0268af6b2fb1da'
+            '1112fff96d11ee05bcdffe88ad1de3c4deee25cd302646e5820d196e9304cbf8')
 
 prepare() {
   cd "${_srcname}"
@@ -107,6 +107,9 @@ _package-headers() {
   install -Dt "${_builddir}/kernel" -m644 kernel/Makefile
   install -Dt "${_builddir}/arch/arm64" -m644 arch/arm64/Makefile
   cp -t "${_builddir}" -a scripts
+
+  # required when DEBUG_INFO_BTF_MODULES is enabled
+  install -Dt "${_builddir}/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
 
   echo "Installing headers..."
   cp -t "${_builddir}" -a include
