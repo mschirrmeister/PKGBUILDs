@@ -3,7 +3,7 @@
 
 pkgname=uboot-odroid-hc4-mainline
 pkgver=2025.10
-pkgrel=2
+pkgrel=3
 pkgdesc="Mainline U-Boot for ODROID-HC4"
 arch=('aarch64')
 url="https://github.com/hardkernel/u-boot"
@@ -31,8 +31,8 @@ build() {
 
   make distclean
   make odroid-hc4_defconfig
-  echo 'CONFIG_IDENT_STRING=" Manjaro ARM"' >> .config
-  make -j$(nproc) EXTRAVERSION=-${pkgrel}
+  echo 'CONFIG_IDENT_STRING="Arch Linux ARM"' >> .config
+  make -j$(nproc) EXTRAVERSION=-msc-${pkgrel}
 
   cp u-boot.bin ../${_fip_board_dir}/bl33.bin
 
