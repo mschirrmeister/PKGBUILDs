@@ -1,0 +1,119 @@
+# U-Boot: OrangePi 4 LTS based on PKGBUILD for RockPro64
+# Maintainer: Marco Schirrmeister <mschirrmeister@gmail.com>
+# Contributor: xxx
+
+pkgname=uboot-orangepi4-lts
+pkgver=2025.10
+pkgrel=1
+_tfaver=2.13.0
+pkgdesc="U-Boot for OrangePi 4 LTS"
+arch=('aarch64')
+url='http://www.denx.de/wiki/U-Boot/WebHome'
+license=('GPL')
+makedepends=('git' 'gcc-arm-none-eabi-bin' 'dtc' 'bc' 'python-setuptools' 'swig')
+provides=('uboot')
+conflicts=('uboot')
+#replaces=('uboot-rockpi4')
+install=${pkgname}.install
+source=("ftp://ftp.denx.de/pub/u-boot/u-boot-${pkgver/rc/-rc}.tar.bz2"
+        #"https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/snapshot/trusted-firmware-a-${_tfaver}.tar.gz"
+        "https://github.com/ARM-software/arm-trusted-firmware/archive/refs/tags/v${_tfaver}.tar.gz"
+        "https://raw.githubusercontent.com/rockchip-linux/rkbin/b46c088e6f40bb5a2c513af4ab593a21f83c0e83/bin/rk33/rk3399_ddr_933MHz_v1.25.bin"
+        "https://raw.githubusercontent.com/rockchip-linux/rkbin/bc15c5e21557dad5440f8ed0312ec368f73e9476/bin/rk33/rk3399_bl31_v1.35.elf"
+        "orangepi_4_lts_rk3399_defconfig"
+        "0001-atf-bl31-rk3399_braudrate.patch"
+)
+sha256sums=('b4f032848e56cc8f213ad59f9132c084dbbb632bc29176d024e58220e0efdf4a'
+            'a0798acdac86101019f2e53c80846950c7a658314381c48c39a86f6b9fc70173'
+            '40e010cf2cfcfbd1dc6b75feaea227851f92b2fd38eaf0dd71c77323b56cdf51'
+            '68ad1a1db071c1b63a4bdf8a5b5210ef1f880dd55c73f07fc3cb29082825dae9'
+            'a65346c155f7fac1afa099a568061560d7080f0cb20ad95bcb67bb9596a408ce'
+            '85103e8cfde86401c018aec955bbcdb3ba1b021751d9df2f800ac0e6316777b6')
+
+prepare() {
+  cd u-boot-${pkgver/rc/-rc}
+
+}
+
+build() {
+  # Avoid build warnings by editing a .config option in place instead of
+  # appending an option to .config, if an option is already present
+  update_config() {
+    if ! grep -q "^$1=$2$" .config; then
+      if grep -q "^# $1 is not set$" .config; then
+        sed -i -e "s/^# $1 is not set$/$1=$2/g" .config
+      elif grep -q "^$1=" .config; then
+        sed -i -e "s/^$1=.*/$1=$2/g" .config
+      else
+        echo "$1=$2" >> .config
+      fi
+    fi
+  }
+
+  unset CFLAGS CXXFLAGS CPPFLAGS LDFLAGS
+
+  cd arm-trusted-firmware-${_tfaver}
+
+  echo -e "\nPatching TF-A...\n"
+  cat ../0001-atf-bl31-rk3399_braudrate.patch | patch -p1
+
+  echo -e "\nBuilding TF-A for OrangePi 4 LTS...\n"
+  # Build options can be found here https://trustedfirmware-a.readthedocs.io/en/latest/getting_started/build-options.html#common-build-options
+  make PLAT=rk3399 BUILD_STRING='msc' LOG_LEVEL=40 V=1
+#  make PLAT=rk3399 BUILD_STRING='msc' LOG_LEVEL=60 V=1
+  cp build/rk3399/release/bl31/bl31.elf ../u-boot-${pkgver/rc/-rc}
+
+  cd ../u-boot-${pkgver/rc/-rc}
+  # Status November 2025
+  # These file come from a specific git commit, since newer files don't work with OPi4LTS board
+  # bl31 is not used, see comment in uboot build section below
+
+#  cp ../rk3399_bl31_v1.35.elf ../u-boot-${pkgver/rc/-rc}
+
+  cp ../rk3399_ddr_933MHz_v1.25.bin ../u-boot-${pkgver/rc/-rc}/
+#  cp ../rk3399_miniloader_v1.26.bin ../u-boot-${pkgver/rc/-rc}/
+
+  cp ../orangepi_4_lts_rk3399_defconfig ../u-boot-${pkgver/rc/-rc}/configs/
+
+  echo -e "\nBuilding U-Boot for OrangePi 4 LTS...\n"
+  make orangepi_4_lts_rk3399_defconfig
+#  make orangepi-rk3399_defconfig
+  update_config 'CONFIG_IDENT_STRING' '" Arch Linux ARM"'
+  update_config 'CONFIG_OF_LIBFDT_OVERLAY' 'y'
+  update_config 'CONFIG_SPL_MMC_SDHCI_SDMA' 'n'
+  update_config 'CONFIG_MMC_SDHCI_SDMA' 'y'
+  update_config 'CONFIG_MMC_SPEED_MODE_SET' 'y'
+  update_config 'CONFIG_MMC_IO_VOLTAGE' 'y'
+  update_config 'CONFIG_MMC_UHS_SUPPORT' 'y'
+  update_config 'CONFIG_MMC_HS400_ES_SUPPORT' 'y'
+  update_config 'CONFIG_MMC_HS400_SUPPORT' 'y'
+  update_config 'CONFIG_SYS_LOAD_ADDR' '0x800800'
+  update_config 'CONFIG_TEXT_BASE' '0x00200000'
+  update_config 'CONFIG_SPL_HAS_BSS_LINKER_SECTION' 'y'
+  update_config 'CONFIG_SPL_BSS_START_ADDR' '0x03f80000'
+  update_config 'CONFIG_SPL_BSS_MAX_SIZE' '0x8000'
+  update_config 'CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR' 'y'
+  update_config 'CONFIG_CUSTOM_SYS_INIT_SP_ADDR' '0x03f00000'
+  update_config 'CONFIG_RAM_ROCKCHIP_LPDDR4' 'y'
+  update_config 'CONFIG_ROCKCHIP_EXTERNAL_TPL' 'y'
+  update_config 'CONFIG_ENV_RELOC_GD_ENV_ADDR' 'y'
+  update_config '# CONFIG_SPL_RAW_IMAGE_SUPPORT' 'is not set'
+  update_config '# CONFIG_CMD_SETEXPR' 'is not set'
+  update_config 'CONFIG_BAUDRATE' '115200'
+  update_config 'CONFIG_SPL_BAUDRATE' '115200'
+  make olddefconfig
+
+
+  # We don't use a pre-build version of the "bl31" file.
+  # We use the mainline of "bl31" that is build from the ATF.
+#  make EXTRAVERSION=-${pkgrel} BL31=rk3399_bl31_v1.35.elf ROCKCHIP_TPL=rk3399_ddr_933MHz_v1.25.bin
+#  make EXTRAVERSION=-${pkgrel} BL31=bl31.elf ROCKCHIP_TPL=rk3399_ddr_933MHz_v1.25.bin TPL_BIN=rk3399_miniloader_v1.26.bin
+  make EXTRAVERSION=-${pkgrel} BL31=bl31.elf ROCKCHIP_TPL=rk3399_ddr_933MHz_v1.25.bin
+}
+
+package() {
+  cd u-boot-${pkgver/rc/-rc}
+
+  mkdir -p "${pkgdir}/boot/extlinux"
+  install -D -m 0644 u-boot-rockchip.bin idbloader.img u-boot.itb -t "${pkgdir}/boot"
+}
