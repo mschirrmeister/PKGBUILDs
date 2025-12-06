@@ -1,0 +1,109 @@
+# U-Boot: NanoPi R76S
+# Maintainer: Marco Schirrmeister <mschirrmeister@gmail.com>
+# Contributor: 
+
+pkgname=uboot-rk3576-nanopi-r76s
+pkgver=2026.01rc3
+pkgrel=1
+_tfaver=2.14.0
+pkgdesc="U-Boot for FriendlyElec NanoPi R76S"
+arch=('aarch64')
+url='http://www.denx.de/wiki/U-Boot/WebHome'
+license=('GPL')
+makedepends=('git' 'gcc-arm-none-eabi-bin' 'dtc' 'bc' 'python-setuptools' 'swig')
+provides=('uboot')
+conflicts=('uboot')
+#replaces=('uboot-xxx')
+install=${pkgname}.install
+source=("ftp://ftp.denx.de/pub/u-boot/u-boot-${pkgver/rc/-rc}.tar.bz2"
+        "https://github.com/ARM-software/arm-trusted-firmware/archive/refs/tags/v${_tfaver}.tar.gz"
+        "https://raw.githubusercontent.com/rockchip-linux/rkbin/57296ad286255d98a3d409036a4b8560b6013b7d/bin/rk35/rk3576_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin"
+        "https://raw.githubusercontent.com/rockchip-linux/rkbin/cc3452e077f62a2e21e92fcc978d1b0ea19a1e33/bin/rk35/rk3576_bl31_v1.20.elf"
+        'add-nanopi-r76s-support.patch'
+)
+sha256sums=('fe26d29ef4ef2fcf4a54b1c7d7280adc6f15755354a9ced85f5677b17fb17bbc'
+            'd44936677a63c5216ffc151ae7711d458c992ef159a9df271fd9429f0a1cb5e5'
+            '7403cf1663d4b0c9d7c692014e0852e60f0d3977209ec75fa755c293f54e2d50'
+            '34f875f6cc4fd2a633e08dcbe9f4f031ddf95a1bf6d5eaeb7621ac750d997cac'
+            'a1a094159f3f8d4b4e36da82a2798b53a48e0dcd06ee250aa2f5bc5f70311da9')
+
+prepare() {
+  cd u-boot-${pkgver/rc/-rc}
+
+  echo "Patching u-boot"
+  cat ../add-nanopi-r76s-support.patch | patch -p1
+}
+
+build() {
+  # Avoid build warnings by editing a .config option in place instead of
+  # appending an option to .config, if an option is already present
+  update_config() {
+    if ! grep -q "^$1=$2$" .config; then
+      if grep -q "^# $1 is not set$" .config; then
+        sed -i -e "s/^# $1 is not set$/$1=$2/g" .config
+      elif grep -q "^$1=" .config; then
+        sed -i -e "s/^$1=.*/$1=$2/g" .config
+      else
+        echo "$1=$2" >> .config
+      fi
+    fi
+  }
+
+  unset CFLAGS CXXFLAGS CPPFLAGS LDFLAGS
+
+  cd arm-trusted-firmware-${_tfaver}
+
+  echo -e "\nBuilding TF-A for NanoPi R76S...\n"
+  # Build options can be found here https://trustedfirmware-a.readthedocs.io/en/latest/getting_started/build-options.html#common-build-options
+  make PLAT=rk3576 BUILD_STRING='msc' LOG_LEVEL=40 V=1
+  cp build/rk3576/release/bl31/bl31.elf ../u-boot-${pkgver/rc/-rc}
+
+  cd ../u-boot-${pkgver/rc/-rc}
+
+  # Status December 2025
+  # These file come from a specific git commit, since newer files don't work with NanoPi R76S board
+  # bl31 is not used, see comment in uboot build section below
+  cp ../rk3576_bl31_v1.20.elf ../u-boot-${pkgver/rc/-rc}
+  cp ../rk3576_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin ../u-boot-${pkgver/rc/-rc}/
+
+  echo -e "\nBuilding U-Boot for NanoPi R76S...\n"
+  make nanopi-r76s-rk3576_defconfig
+  update_config 'CONFIG_USE_PREBOOT' 'y'
+  update_config 'CONFIG_PREBOOT' 'led led-1 on; sleep 0.1; led led-1 off'
+  update_config 'CONFIG_PREBOOT_DEFINED' 'y'
+  update_config 'CONFIG_LOGLEVEL' '7'
+  update_config 'CONFIG_SPL_LOGLEVEL' '7'
+  update_config 'CONFIG_SYS_STDIO_DEREGISTER' 'y'
+  update_config 'CONFIG_CMD_NVEDIT_EFI' 'y'
+  update_config 'CONFIG_CMD_NFS' 'y'
+  update_config 'CONFIG_NFS_TIMEOUT' '2000'
+  update_config 'CONFIG_CMD_DNS' 'y'
+  update_config 'CONFIG_CMD_WGET' 'y'
+  update_config 'CONFIG_CMD_EFIDEBUG' 'y'
+  update_config 'CONFIG_PROT_TCP' 'y'
+  update_config 'CONFIG_PROT_TCP_SACK' 'y'
+  update_config 'CONFIG_DNS' 'y'
+  update_config 'CONFIG_WGET' 'y'
+#  update_config 'CONFIG_USB_FUNCTION_ACM' 'y'
+#  update_config 'CONFIG_CIRCBUF' 'y'
+  update_config 'CONFIG_XXHASH' 'y'
+  update_config 'CONFIG_LZO' 'y'
+  update_config 'CONFIG_BZIP2' 'y'
+  update_config 'CONFIG_ZSTD' 'y'
+  update_config 'CONFIG_ZSTD_LIB_MINIFY' 'y'
+  update_config 'CONFIG_CMD_BTRFS' 'y'
+  update_config 'CONFIG_FS_BTRFS' 'y'
+  make olddefconfig
+
+  # We don't use a pre-build version of the "bl31" file.
+  # We use the mainline of "bl31" that is build from the ATF.
+#  make EXTRAVERSION=-${pkgrel} BL31=rk3576_bl31_v1.20.elf ROCKCHIP_TPL=rk3576_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin
+  make EXTRAVERSION=-${pkgrel} BL31=bl31.elf ROCKCHIP_TPL=rk3576_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin
+}
+
+package() {
+  cd u-boot-${pkgver/rc/-rc}
+
+  mkdir -p "${pkgdir}/boot/extlinux"
+  install -D -m 0644 u-boot-rockchip.bin idbloader.img u-boot.itb -t "${pkgdir}/boot"
+}
