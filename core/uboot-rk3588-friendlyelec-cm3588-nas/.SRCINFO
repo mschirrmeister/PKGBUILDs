@@ -1,0 +1,26 @@
+pkgbase = uboot-rk3588-friendlyelec-cm3588-nas
+	pkgdesc = U-Boot for FriendlyElec CM3588 NAS
+	pkgver = 2025.10
+	pkgrel = 7
+	url = http://www.denx.de/wiki/U-Boot/WebHome
+	install = uboot-rk3588-friendlyelec-cm3588-nas.install
+	arch = aarch64
+	license = GPL
+	makedepends = git
+	makedepends = gcc-arm-none-eabi-bin
+	makedepends = dtc
+	makedepends = bc
+	makedepends = python-setuptools
+	makedepends = swig
+	provides = uboot
+	conflicts = uboot
+	source = ftp://ftp.denx.de/pub/u-boot/u-boot-2025.10.tar.bz2
+	source = https://github.com/ARM-software/arm-trusted-firmware/archive/refs/tags/v2.13.0.tar.gz
+	source = https://raw.githubusercontent.com/rockchip-linux/rkbin/b9183559cabebed120ad431a614b291fee04c498/bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.18.bin
+	source = https://raw.githubusercontent.com/rockchip-linux/rkbin/0f8ac860f0479da56a1decae207ddc99e289f2e2/bin/rk35/rk3588_bl31_v1.48.elf
+	sha256sums = b4f032848e56cc8f213ad59f9132c084dbbb632bc29176d024e58220e0efdf4a
+	sha256sums = a0798acdac86101019f2e53c80846950c7a658314381c48c39a86f6b9fc70173
+	sha256sums = d89d40a8183b099589bfcffc5cc2ce9d874eb5b1d19b78bdad2cfcf45b9cb68f
+	sha256sums = ff717807d873ce95e5463ac29e0b5f081f8c5956d57f40376a1a3fe0fb93accf
+
+pkgname = uboot-rk3588-friendlyelec-cm3588-nas

@@ -1,0 +1,104 @@
+# U-Boot: Rock Pi 4C based on PKGBUILD for RockPro64
+# Maintainer: Marco SChirrmeister <mschirrmeister@gmail.com>
+# Contributor: 
+
+pkgname=uboot-rk3588-friendlyelec-cm3588-nas
+pkgver=2025.10
+pkgrel=7
+_tfaver=2.13.0
+pkgdesc="U-Boot for FriendlyElec CM3588 NAS"
+arch=('aarch64')
+url='http://www.denx.de/wiki/U-Boot/WebHome'
+license=('GPL')
+makedepends=('git' 'gcc-arm-none-eabi-bin' 'dtc' 'bc' 'python-setuptools' 'swig')
+provides=('uboot')
+conflicts=('uboot')
+#replaces=('uboot-xxx')
+install=${pkgname}.install
+source=("ftp://ftp.denx.de/pub/u-boot/u-boot-${pkgver/rc/-rc}.tar.bz2"
+        "https://github.com/ARM-software/arm-trusted-firmware/archive/refs/tags/v${_tfaver}.tar.gz"
+        "https://raw.githubusercontent.com/rockchip-linux/rkbin/b9183559cabebed120ad431a614b291fee04c498/bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.18.bin"
+        "https://raw.githubusercontent.com/rockchip-linux/rkbin/0f8ac860f0479da56a1decae207ddc99e289f2e2/bin/rk35/rk3588_bl31_v1.48.elf")
+sha256sums=('b4f032848e56cc8f213ad59f9132c084dbbb632bc29176d024e58220e0efdf4a'
+            'a0798acdac86101019f2e53c80846950c7a658314381c48c39a86f6b9fc70173'
+            'd89d40a8183b099589bfcffc5cc2ce9d874eb5b1d19b78bdad2cfcf45b9cb68f'
+            'ff717807d873ce95e5463ac29e0b5f081f8c5956d57f40376a1a3fe0fb93accf')
+
+prepare() {
+  cd u-boot-${pkgver/rc/-rc}
+
+}
+
+build() {
+  # Avoid build warnings by editing a .config option in place instead of
+  # appending an option to .config, if an option is already present
+  update_config() {
+    if ! grep -q "^$1=$2$" .config; then
+      if grep -q "^# $1 is not set$" .config; then
+        sed -i -e "s/^# $1 is not set$/$1=$2/g" .config
+      elif grep -q "^$1=" .config; then
+        sed -i -e "s/^$1=.*/$1=$2/g" .config
+      else
+        echo "$1=$2" >> .config
+      fi
+    fi
+  }
+
+  unset CFLAGS CXXFLAGS CPPFLAGS LDFLAGS
+
+  cd arm-trusted-firmware-${_tfaver}
+
+  echo -e "\nBuilding TF-A for CM3588 NAS...\n"
+  # Build options can be found here https://trustedfirmware-a.readthedocs.io/en/latest/getting_started/build-options.html#common-build-options
+  make PLAT=rk3588 BUILD_STRING='msc' LOG_LEVEL=40 V=1
+  cp build/rk3588/release/bl31/bl31.elf ../u-boot-${pkgver/rc/-rc}
+
+  cd ../u-boot-${pkgver/rc/-rc}
+
+  # Status November 2025
+  # These file come from a specific git commit, since newer files don't work with CM3588-NAS board
+  # bl31 is not used, see comment in uboot build section below
+  cp ../rk3588_bl31_v1.48.elf ../u-boot-${pkgver/rc/-rc}
+  cp ../rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.18.bin ../u-boot-${pkgver/rc/-rc}/
+
+#  cp ../uboot-cm3588-nas-rk3588_defconfig ../u-boot-${pkgver/rc/-rc}/configs/cm3588-nas-rk3588_defconfig
+
+  echo -e "\nBuilding U-Boot for CM3588 NAS...\n"
+  make cm3588-nas-rk3588_defconfig
+  update_config 'CONFIG_USE_PREBOOT' 'y'
+  update_config 'CONFIG_PREBOOT' 'led led-1 on; sleep 0.1; led led-1 off'
+  update_config 'CONFIG_PREBOOT_DEFINED' 'y'
+  update_config 'CONFIG_LOGLEVEL' '7'
+  update_config 'CONFIG_SPL_LOGLEVEL' '7'
+  update_config 'CONFIG_SYS_STDIO_DEREGISTER' 'y'
+  update_config 'CONFIG_CMD_NVEDIT_EFI' 'y'
+  update_config 'CONFIG_CMD_NFS' 'y'
+  update_config 'CONFIG_NFS_TIMEOUT' '2000'
+  update_config 'CONFIG_CMD_DNS' 'y'
+  update_config 'CONFIG_CMD_WGET' 'y'
+  update_config 'CONFIG_CMD_EFIDEBUG' 'y'
+  update_config 'CONFIG_PROT_TCP' 'y'
+  update_config 'CONFIG_PROT_TCP_SACK' 'y'
+  update_config 'CONFIG_DNS' 'y'
+  update_config 'CONFIG_WGET' 'y'
+  update_config 'CONFIG_USB_FUNCTION_ACM' 'y'
+  update_config 'CONFIG_CIRCBUF' 'y'
+  update_config 'CONFIG_XXHASH' 'y'
+  update_config 'CONFIG_LZO' 'y'
+  update_config 'CONFIG_BZIP2' 'y'
+  update_config 'CONFIG_ZSTD' 'y'
+  update_config 'CONFIG_ZSTD_LIB_MINIFY' 'y'
+  make olddefconfig
+
+  # We don't use a pre-build version of the "bl31" file.
+  # We use the mainline of "bl31" that is build from the ATF.
+#  make EXTRAVERSION=-${pkgrel} BL31=rk3588_bl31_v1.48.elf ROCKCHIP_TPL=rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.18.bin
+  make EXTRAVERSION=-${pkgrel} BL31=bl31.elf ROCKCHIP_TPL=rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.18.bin
+}
+
+package() {
+  cd u-boot-${pkgver/rc/-rc}
+
+  mkdir -p "${pkgdir}/boot/extlinux"
+  install -D -m 0644 u-boot-rockchip.bin idbloader.img u-boot.itb -t "${pkgdir}/boot"
+}
