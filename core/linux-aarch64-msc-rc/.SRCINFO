@@ -1,6 +1,6 @@
 pkgbase = linux-aarch64-msc-rc
 	pkgver = 6.18.rc7
-	pkgrel = 4
+	pkgrel = 5
 	url = https://kernel.org
 	arch = aarch64
 	license = GPL2
@@ -23,7 +23,7 @@ pkgbase = linux-aarch64-msc-rc
 	source = rk3399-unlock-temperature.patch
 	source = rk3399-add-sclk-i2sout-src-clock.patch
 	sha256sums = 4a2916f05a0ed9b771af99ce7710b007b618b93c158cd7549e02b80218afcc35
-	sha256sums = 5edbe8fe174b91f44736f871f9fb94d1fdc2a4933350c8c752243079795e6a1c
+	sha256sums = 7e82b7ca2f486ee9f2725a13a7753e5255d9260752bdf47dfbecc01c02931777
 	sha256sums = 0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb
 	sha256sums = 7bbedb7394cc00a0fe62b62638ebfb2d60a4846f9666a870c88ac8db98536a77
 	sha256sums = 8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389
