@@ -22,3 +22,5 @@ Kernel is based on [7Ji](https://github.com/7Ji-PKGBUILDs/linux-aarch64-7ji). Th
 - ~~Orange Pi 5 Plus~~
 - ~~Orange Pi 5 Max~~
 - ~~Rock 5B+~~
+- Orange Pi 4 LTS
+- Amlogic and Rockchip patches related to reboot issues
