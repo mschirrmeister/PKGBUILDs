@@ -1,6 +1,6 @@
 pkgbase = linux-aarch64-msc-rc
 	pkgver = 6.18.rc7
-	pkgrel = 5
+	pkgrel = 6
 	url = https://kernel.org
 	arch = aarch64
 	license = GPL2
@@ -22,6 +22,7 @@ pkgbase = linux-aarch64-msc-rc
 	source = rk3399-sd-pwr-pinctrl.patch
 	source = rk3399-unlock-temperature.patch
 	source = rk3399-add-sclk-i2sout-src-clock.patch
+	source = 2000-Add-FriendlyElec-NanoPi-R76S.patch
 	sha256sums = 4a2916f05a0ed9b771af99ce7710b007b618b93c158cd7549e02b80218afcc35
 	sha256sums = 7e82b7ca2f486ee9f2725a13a7753e5255d9260752bdf47dfbecc01c02931777
 	sha256sums = 0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb
@@ -34,6 +35,7 @@ pkgbase = linux-aarch64-msc-rc
 	sha256sums = e806fbe6129275bc159f7dde2a31620d906a8a8090b4bd03b6af35f69fc7951a
 	sha256sums = 88111ef3c9079d36287dff21095acf059950f61d5401c7de6e7d67b46e020da9
 	sha256sums = bcf7c0f42dae5a6dce3fc20ce83b5b83fca3646ebe09b1a4e7a1a82e573a2d87
+	sha256sums = 1f564b2fd36eff15af3ef49e0935782900093e205d84d21edcdcdaa7dbe8eb15
 
 pkgname = linux-aarch64-msc-rc
 	pkgdesc = The Linux Kernel and module - almost mainline but with MSC's patches, Rockchip

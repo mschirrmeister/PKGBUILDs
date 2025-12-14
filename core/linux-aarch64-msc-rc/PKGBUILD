@@ -12,7 +12,7 @@ pkgname=(
   "${pkgbase}-headers"
 )
 pkgver=${_rcver}.rc${_rcrel}
-pkgrel=5
+pkgrel=6
 arch=('aarch64')
 url="https://kernel.org"
 license=('GPL2')
@@ -34,9 +34,10 @@ source=(
   'rk3399-sd-pwr-pinctrl.patch'
   'rk3399-unlock-temperature.patch'
   'rk3399-add-sclk-i2sout-src-clock.patch'
+  '2000-Add-FriendlyElec-NanoPi-R76S.patch'
 )
 sha256sums=('4a2916f05a0ed9b771af99ce7710b007b618b93c158cd7549e02b80218afcc35'
-            '3bb53a8fc9a9e6db07533f87b6cfde5cf78ea65f0f54410f0f56d07db0112c48'
+            '7e82b7ca2f486ee9f2725a13a7753e5255d9260752bdf47dfbecc01c02931777'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             '7bbedb7394cc00a0fe62b62638ebfb2d60a4846f9666a870c88ac8db98536a77'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
@@ -46,7 +47,8 @@ sha256sums=('4a2916f05a0ed9b771af99ce7710b007b618b93c158cd7549e02b80218afcc35'
             '2d57b54f7d59969640e9c80e9f3e23230619fcd056d69995416f4781f6b3ae64'
             'e806fbe6129275bc159f7dde2a31620d906a8a8090b4bd03b6af35f69fc7951a'
             '88111ef3c9079d36287dff21095acf059950f61d5401c7de6e7d67b46e020da9'
-            'bcf7c0f42dae5a6dce3fc20ce83b5b83fca3646ebe09b1a4e7a1a82e573a2d87')
+            'bcf7c0f42dae5a6dce3fc20ce83b5b83fca3646ebe09b1a4e7a1a82e573a2d87'
+            '1f564b2fd36eff15af3ef49e0935782900093e205d84d21edcdcdaa7dbe8eb15')
 
 prepare() {
   cd "${_srcname}"
@@ -64,6 +66,8 @@ prepare() {
   cat ../rk3399-add-sclk-i2sout-src-clock.patch | patch -p1
 
   cp ../rk3399-orangepi-4-lts.dts arch/arm64/boot/dts/rockchip/
+
+  cat ../2000-Add-FriendlyElec-NanoPi-R76S.patch | patch -p1
 
   echo "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
