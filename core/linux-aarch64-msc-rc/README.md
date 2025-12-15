@@ -4,6 +4,8 @@ This package is latest [mainline kernel](https://git.kernel.org/pub/scm/linux/ke
 
 ## Notes
 
+With the upgrade to kernel `6.19+`, basic support for the **NanoPi R76S** is present in the mainline kernel and the patches are no longer needed.
+
 With the upgrade to kernel `6.18+`, **bcachefs** is no longer part of the mainline kernel and needs to be build as a DKMS module.
 
 With the upgrade to kernel `6.16+`, basic support for the **Rock 5B+** is present in the mainline kernel and the patches are no longer needed.
@@ -23,5 +25,5 @@ Kernel is based on [7Ji](https://github.com/7Ji-PKGBUILDs/linux-aarch64-7ji). Th
 - ~~Orange Pi 5 Max~~
 - ~~Rock 5B+~~
 - Orange Pi 4 LTS
-- FriendlyElec NanoPi R76S
+- ~~FriendlyElec NanoPi R76S~~
 - Amlogic and Rockchip patches related to reboot issues
