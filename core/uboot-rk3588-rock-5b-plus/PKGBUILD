@@ -1,0 +1,119 @@
+# U-Boot: Rock 5b+
+# Maintainer: Marco Schirrmeister <mschirrmeister@gmail.com>
+# Contributor: 
+
+pkgname=uboot-rk3588-rock-5b-plus
+pkgver=2026.01rc4
+pkgrel=1
+_tfaver=2.14.0
+pkgdesc="U-Boot for Radxa Rock 5b+"
+arch=('aarch64')
+url='http://www.denx.de/wiki/U-Boot/WebHome'
+license=('GPL')
+makedepends=('git' 'gcc-arm-none-eabi-bin' 'dtc' 'bc' 'python-setuptools' 'swig')
+provides=('uboot')
+conflicts=('uboot')
+#replaces=('uboot-xxx')
+install=${pkgname}.install
+source=("ftp://ftp.denx.de/pub/u-boot/u-boot-${pkgver/rc/-rc}.tar.bz2"
+        "https://github.com/ARM-software/arm-trusted-firmware/archive/refs/tags/v${_tfaver}.tar.gz"
+        "https://raw.githubusercontent.com/rockchip-linux/rkbin/8ff7490774d299aafc39ff479828c89b4a072b96/bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.19.bin"
+        "https://raw.githubusercontent.com/rockchip-linux/rkbin/31a78b07f8a2f51a02655efcdda0f3ad30d172b9/bin/rk35/rk3588_bl31_v1.51.elf"
+        '1000-v2-rockchip-sdram-Add-rockchip_sdram_type-helper.patch'
+        '1001-v2-rockchip-rock5b-rk3588-Add-support-for-ROCK-5B.patch'
+        '1002-v2-configs-Add-rock5b_plus-rk3588_defconfig.diff'
+        '1003-v2-MAINTAINERS-Add-entry-for-Radxa-ROCK-5B.diff'
+)
+sha256sums=('82400f98fc7642c7b9cbb6ae583235f3495f5bd43a0b92c7c308c1fb667c5ad4'
+            'd44936677a63c5216ffc151ae7711d458c992ef159a9df271fd9429f0a1cb5e5'
+            'e109f3e283c86ad74b6574f5538b11750dea4cab7668175717aa2af7994c28ef'
+            '2847c82a44aff28f1923eea31567c9cf01a7c4bcec4d3b9be1cbf6fcc965f84b'
+            'a99c7779af8b60257171ee595a58457e6bbd049f6538c8c3f8bbed31a3053b94'
+            'caedec58cb5bfd00030ad14e728f17dcbbf0eb55fde5485c75d0703e221000c1'
+            '800600a54b71b07c6a5801391be0a34f3db3729c1e8ce338d2122336f7adb6e0'
+            'fee1c24a2b6a72f17b5affef31c52df110c96aa0bec06bf1f9c630669eeb948a')
+
+prepare() {
+  cd u-boot-${pkgver/rc/-rc}
+
+  echo "Patching u-boot"
+   cat ../1000-v2-rockchip-sdram-Add-rockchip_sdram_type-helper.patch | patch -p1
+   cat ../1001-v2-rockchip-rock5b-rk3588-Add-support-for-ROCK-5B.patch | patch -p1
+   cat ../1002-v2-configs-Add-rock5b_plus-rk3588_defconfig.diff | patch -p1
+   cat ../1003-v2-MAINTAINERS-Add-entry-for-Radxa-ROCK-5B.diff | patch -p1
+}
+
+build() {
+  # Avoid build warnings by editing a .config option in place instead of
+  # appending an option to .config, if an option is already present
+  update_config() {
+    if ! grep -q "^$1=$2$" .config; then
+      if grep -q "^# $1 is not set$" .config; then
+        sed -i -e "s/^# $1 is not set$/$1=$2/g" .config
+      elif grep -q "^$1=" .config; then
+        sed -i -e "s/^$1=.*/$1=$2/g" .config
+      else
+        echo "$1=$2" >> .config
+      fi
+    fi
+  }
+
+  unset CFLAGS CXXFLAGS CPPFLAGS LDFLAGS
+
+  cd arm-trusted-firmware-${_tfaver}
+
+  echo -e "\nBuilding TF-A for Rock 5b+...\n"
+  # Build options can be found here https://trustedfirmware-a.readthedocs.io/en/latest/getting_started/build-options.html#common-build-options
+  make PLAT=rk3588 BUILD_STRING='msc' LOG_LEVEL=40 V=1
+  cp build/rk3588/release/bl31/bl31.elf ../u-boot-${pkgver/rc/-rc}
+
+  cd ../u-boot-${pkgver/rc/-rc}
+
+  # Status December 2025
+  # These file come from a specific git commit, since newer files don't work with Rock 5b+ board
+  # bl31 is not used, see comment in uboot build section below
+  cp ../rk3588_bl31_v1.51.elf ../u-boot-${pkgver/rc/-rc}
+  cp ../rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.19.bin ../u-boot-${pkgver/rc/-rc}/
+
+  echo -e "\nBuilding U-Boot for Rock 5b+...\n"
+  make rock5b_plus-rk3588_defconfig
+  update_config 'CONFIG_USE_PREBOOT' 'y'
+  update_config 'CONFIG_PREBOOT' 'led led-1 on; sleep 0.1; led led-1 off'
+  update_config 'CONFIG_PREBOOT_DEFINED' 'y'
+  update_config 'CONFIG_LOGLEVEL' '7'
+  update_config 'CONFIG_SPL_LOGLEVEL' '7'
+  update_config 'CONFIG_SYS_STDIO_DEREGISTER' 'y'
+  update_config 'CONFIG_CMD_NVEDIT_EFI' 'y'
+  update_config 'CONFIG_CMD_NFS' 'y'
+  update_config 'CONFIG_NFS_TIMEOUT' '2000'
+  update_config 'CONFIG_CMD_DNS' 'y'
+  update_config 'CONFIG_CMD_WGET' 'y'
+  update_config 'CONFIG_CMD_EFIDEBUG' 'y'
+  update_config 'CONFIG_PROT_TCP' 'y'
+  update_config 'CONFIG_PROT_TCP_SACK' 'y'
+  update_config 'CONFIG_DNS' 'y'
+  update_config 'CONFIG_WGET' 'y'
+  update_config 'CONFIG_XXHASH' 'y'
+  update_config 'CONFIG_LZO' 'y'
+  update_config 'CONFIG_BZIP2' 'y'
+  update_config 'CONFIG_ZSTD' 'y'
+  update_config 'CONFIG_ZSTD_LIB_MINIFY' 'y'
+  update_config 'CONFIG_CMD_BTRFS' 'y'
+  update_config 'CONFIG_FS_BTRFS' 'y'
+#  update_config 'CONFIG_ENV_IS_IN_EXT4' 'y'
+#  update_config 'CONFIG_ENV_EXT4_DEVICE_AND_PART '0:3'
+#  update_config 'CONFIG_ENV_EXT4_FILE '/boot/uboot-msc.env'
+  make olddefconfig
+
+  # We don't use a pre-build version of the "bl31" file.
+  # We use the mainline of "bl31" that is build from the ATF.
+#  make EXTRAVERSION=-${pkgrel} BL31=rk3588_bl31_v1.51.elf ROCKCHIP_TPL=rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.19.bin
+  make EXTRAVERSION=-${pkgrel} BL31=bl31.elf ROCKCHIP_TPL=rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.19.bin
+}
+
+package() {
+  cd u-boot-${pkgver/rc/-rc}
+
+  mkdir -p "${pkgdir}/boot/extlinux"
+  install -D -m 0644 u-boot-rockchip.bin idbloader.img u-boot.itb -t "${pkgdir}/boot"
+}

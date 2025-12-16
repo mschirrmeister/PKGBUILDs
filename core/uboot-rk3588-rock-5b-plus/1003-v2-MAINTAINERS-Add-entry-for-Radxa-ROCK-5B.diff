@@ -1,0 +1,18 @@
+# https://patchwork.ozlabs.org/project/uboot/patch/20251104192354.2232191-3-bryan@bryanhinton.com/
+
+Signed-off-by: Bryan Hinton <bryan@bryanhinton.com>
+---
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8c7d0e0ab2f..bae65d7c651 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1974,3 +1974,8 @@ T:	git https://source.denx.de/u-boot/u-boot.git
+ F:	configs/tools-only_defconfig
+ F:	*
+ F:	*/
++
++RADXA ROCK 5B+
++M:    Bryan Hinton <bryan@bryanhinton.com>
++S:    Maintained
++F:    configs/rock5b_plus-rk3588_defconfig

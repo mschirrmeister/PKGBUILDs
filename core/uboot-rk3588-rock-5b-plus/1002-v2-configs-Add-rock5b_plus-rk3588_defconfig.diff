@@ -1,0 +1,27 @@
+# https://patchwork.ozlabs.org/project/uboot/patch/20251104192354.2232191-2-bryan@bryanhinton.com/
+
+Add a Radxa ROCK 5B+ defconfig that augments the ROCK 5B defconfig
+via #include and sets the minimal deltas to select the 5B+ upstream DTS.
+
+Tested on ROCK 5B+ rev 1.2 (32 GB LPDDR5), booting U-Boot from microSD.
+Build/test details:
+  - U-Boot build string: U-Boot 2026.01-rc1-00243-gd128b673cfb2 (Nov 04 2025 - 13:08:23 -0600)
+  - GCC: aarch64-linux-gnu-gcc 15.1.0
+  - TPL: rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v1.19.bin
+  - BL31: rk3588_bl31_v1.51.elf
+  - Verified: control FDT present; `mmc list` shows SD/eMMC; `usb tree` enumerates.
+
+Signed-off-by: Bryan Hinton <bryan@bryanhinton.com>
+---
+
+diff --git a/configs/rock5b_plus-rk3588_defconfig b/configs/rock5b_plus-rk3588_defconfig
+new file mode 100644
+index 00000000000..89cb7fc20b1
+--- /dev/null
++++ b/configs/rock5b_plus-rk3588_defconfig
+@@ -0,0 +1,5 @@
++#include <configs/rock5b-rk3588_defconfig>
++CONFIG_OF_UPSTREAM=y
++CONFIG_DEFAULT_DEVICE_TREE="rockchip/rk3588-rock-5b-plus"
++CONFIG_OF_LIST="rockchip/rk3588-rock-5b-plus"
++CONFIG_DEFAULT_FDT_FILE="rockchip/rk3588-rock-5b-plus.dtb"
