@@ -1,6 +1,6 @@
 pkgbase = linux-aarch64-msc-rc
 	pkgver = 6.19.rc3
-	pkgrel = 1
+	pkgrel = 2
 	url = https://kernel.org
 	arch = aarch64
 	license = GPL2
@@ -22,6 +22,7 @@ pkgbase = linux-aarch64-msc-rc
 	source = rk3399-sd-pwr-pinctrl.patch
 	source = rk3399-unlock-temperature.patch
 	source = rk3399-add-sclk-i2sout-src-clock.patch
+	source = 2001-mmc-host-dw_mmc-rockchip-add-disable-runtime-pm-quirk.patch
 	sha256sums = 4d26f2c2e326444613ffd3dab3ff3c42083e68e5146d34c272086327d264ee1a
 	sha256sums = 63deb7234a2a0ca736bc89f10601c6b54c1d6d261c6b92014f7c8b16723b9626
 	sha256sums = 0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb
@@ -34,6 +35,7 @@ pkgbase = linux-aarch64-msc-rc
 	sha256sums = e806fbe6129275bc159f7dde2a31620d906a8a8090b4bd03b6af35f69fc7951a
 	sha256sums = 88111ef3c9079d36287dff21095acf059950f61d5401c7de6e7d67b46e020da9
 	sha256sums = bcf7c0f42dae5a6dce3fc20ce83b5b83fca3646ebe09b1a4e7a1a82e573a2d87
+	sha256sums = c4b534ff1cb48bd0c8fcfcf27f6d1978f4e733eb2a4dead09227b945b816ab3a
 
 pkgname = linux-aarch64-msc-rc
 	pkgdesc = The Linux Kernel and module - almost mainline but with MSC's patches, Rockchip and Amlogic
