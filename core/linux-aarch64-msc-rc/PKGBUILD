@@ -4,7 +4,7 @@
 _desc="almost mainline but with MSC's patches, Rockchip and Amlogic"
 
 _rcver=6.19
-_rcrel=4
+_rcrel=5
 
 pkgbase=linux-aarch64-msc-rc
 pkgname=(
@@ -36,8 +36,8 @@ source=(
   'rk3399-add-sclk-i2sout-src-clock.patch'
   '2001-mmc-host-dw_mmc-rockchip-add-disable-runtime-pm-quirk.patch'
 )
-sha256sums=('d53acd935f7e1d4ff15ef61aa647b021932a1555c665229ed90d4087a0e34b14'
-            '91b6d759725240adb14e5c7e81121aea3eb908bc0155f48501a9b9c7b662bde2'
+sha256sums=('f8ad1215e6e43e677fafc5d0416daa3a02271866300368b7a3917d14ecefa9cd'
+            '85249629c0a0fb96ab2458c19e626b423a7bc8f1a36940aabf8a06425f2f014e'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
