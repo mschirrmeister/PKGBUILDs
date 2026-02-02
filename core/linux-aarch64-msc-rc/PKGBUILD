@@ -4,7 +4,7 @@
 _desc="almost mainline but with MSC's patches, Rockchip and Amlogic"
 
 _rcver=6.19
-_rcrel=7
+_rcrel=8
 
 pkgbase=linux-aarch64-msc-rc
 pkgname=(
@@ -40,8 +40,8 @@ source=(
   '2004-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-EVB1.patch'
   '2005-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-Nanopi-R76s.patch'
 )
-sha256sums=('a0d10d925691861704af2cfd6eb3027ea80d1cdda8623a1db6b21b3e771acd09'
-            '289323b5afb804afa88a6812f70a9f1d6dce95b6bd68f70425662c6f7ca4e8dd'
+sha256sums=('0e124baa7ffbe0affc4771bd4de9fa6da8070909ae67e5d0583b790e045271cd'
+            '7904e4153a019cc7657a4a4af51c38022d215bcd8e6040f9e56910fb74c31a10'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
