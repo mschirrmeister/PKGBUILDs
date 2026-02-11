@@ -1,0 +1,237 @@
+# Maintainer: Marco Schirrmeister <mschirrmeister@gmail.com>
+# https://github.com/mschirrmeister/PKGBUILDs/blob/main/core/linux-aarch64-msc-lts/PKGBUILD
+
+_desc="almost mainline but with MSC's patches, for Rockchip and Amlogic"
+
+pkgbase=linux-aarch64-msc-lts
+pkgname=(
+  "${pkgbase}"
+  "${pkgbase}-headers"
+)
+pkgver=6.18.10
+pkgrel=1
+arch=('aarch64')
+url="https://kernel.org"
+license=('GPL2')
+makedepends=( # Since we don't build the doc, most of the makedeps for other linux packages are not needed here
+  'kmod' 'bc' 'dtc' 'uboot-tools' 'pahole'
+)
+options=(!strip)
+_srcname="linux-${pkgver}"
+_kernelname=${pkgbase#linux}
+source=(
+   "https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.xz"
+  'config'
+  'rk3399-orangepi-4-lts.dts'
+  '0001-general-fix-mmc-signal-voltage-before-reboot.patch'
+  '0002-driver-power-meson64-reset.patch'
+  '0003-board-odroid-sm1-reset.patch'
+  '1000-arm64-dts-rockchip-Makefile.patch'
+  'rk3399-enable-dwc3-xhci-usb-trb-quirk.patch'
+  'rk3399-sd-drive-level-8ma.patch'
+  'rk3399-sd-pwr-pinctrl.patch'
+  'rk3399-unlock-temperature.patch'
+  'rk3399-add-sclk-i2sout-src-clock.patch'
+  '2000-Add-FriendlyElec-NanoPi-R76S.patch'
+  '2001-soc-rockchip-grf-Fix-wrong-RK3576_IOCGRF_MISC_CON-definition.patch'
+  '2002-soc-rockchip-grf-Support-multiple-grf-to-be-handled.patch'
+  '2003-mmc-dw_mmc-rockchip-Fix-runtime-PM-support-for-internal-phase-support.patch'
+  '2004-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-EVB1.patch'
+  '2005-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-Nanopi-R76s.patch'
+  '2006-mmc-dw_mmc-rockchip-Add-memory-clock-auto-gating-support.patch'
+)
+sha256sums=('d6d377161741ada2fab28eed69143277634a2aeb5e3883e50c031588ede48ede'
+            '2a2ee346d9511727e49149097c5a451df3f6cfb0eb09265f8c2aa72d3824815d'
+            '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
+            'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
+            '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
+            '1eb6cc0f5a656f7717356e75613eb49fa1f37379b5f6a8abc238da67a8a25e70'
+            'b095ce02dfe8a2bf17ad4a4cc2b1b7bcaec5c42bf13a82acc92c51370fd62583'
+            '43083eaf643995f414ee9d6463bb4ca3857d122e9e1a165c5f3ef0c2007fb2fe'
+            '2d57b54f7d59969640e9c80e9f3e23230619fcd056d69995416f4781f6b3ae64'
+            'e806fbe6129275bc159f7dde2a31620d906a8a8090b4bd03b6af35f69fc7951a'
+            '88111ef3c9079d36287dff21095acf059950f61d5401c7de6e7d67b46e020da9'
+            'bcf7c0f42dae5a6dce3fc20ce83b5b83fca3646ebe09b1a4e7a1a82e573a2d87'
+            '1f564b2fd36eff15af3ef49e0935782900093e205d84d21edcdcdaa7dbe8eb15'
+            '7697f4ac7cd07b70f12abcb20a773619531c309a79021d078db648e8cf5d1f90'
+            '9a6046f81b12434c18778261723d9c33ed369d4b4ae37392e09f99c18ae1dad4'
+            'e129a1348b56676bdde1c40e9efbadb7346f2c2900fc829cad8cd41a6f99abeb'
+            'fb407ffac73c59e55428b47bb91132c9721c7141f2fb15f286b4243c9c6a3f3d'
+            '1d934365993dec1f20aced38a67485860c534a26aac3794acf972cecc2783fdf'
+            '75f0399e3bf3d8d26dcd8c56f8a5aab44a3e0cda5f4b536494a39d1ff29c6a9d')
+
+prepare() {
+  cd "${_srcname}"
+
+  echo "Patching kernel (stable patchset)..."
+  cat ../0001-general-fix-mmc-signal-voltage-before-reboot.patch | patch -p1
+  cat ../0002-driver-power-meson64-reset.patch | patch -p1
+  cat ../0003-board-odroid-sm1-reset.patch | patch -p1
+
+  cat ../1000-arm64-dts-rockchip-Makefile.patch | patch -p1
+  cat ../rk3399-enable-dwc3-xhci-usb-trb-quirk.patch | patch -p1
+  cat ../rk3399-sd-drive-level-8ma.patch | patch -p1
+  cat ../rk3399-sd-pwr-pinctrl.patch | patch -p1
+  cat ../rk3399-unlock-temperature.patch | patch -p1
+  cat ../rk3399-add-sclk-i2sout-src-clock.patch | patch -p1
+
+  cp ../rk3399-orangepi-4-lts.dts arch/arm64/boot/dts/rockchip/
+
+  cat ../2000-Add-FriendlyElec-NanoPi-R76S.patch | patch -p1
+  cat ../2001-soc-rockchip-grf-Fix-wrong-RK3576_IOCGRF_MISC_CON-definition.patch | patch -p1
+  cat ../2002-soc-rockchip-grf-Support-multiple-grf-to-be-handled.patch | patch -p1
+#  cat ../2006-mmc-dw_mmc-rockchip-Add-memory-clock-auto-gating-support.patch | patch -p1
+  cat ../2003-mmc-dw_mmc-rockchip-Fix-runtime-PM-support-for-internal-phase-support.patch | patch -p1
+  cat ../2004-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-EVB1.patch | patch -p1
+  cat ../2005-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-Nanopi-R76s.patch | patch -p1
+  cat ../2006-mmc-dw_mmc-rockchip-Add-memory-clock-auto-gating-support.patch | patch -p1
+
+  echo "Setting version..."
+  echo "-$pkgrel" > localversion.10-pkgrel
+  echo "${pkgbase#linux}" > localversion.20-pkgname
+
+  # Prepare the configuration file
+  cat "${srcdir}/config" > '.config'
+}
+
+build() {
+  cd "${_srcname}"
+
+  # get kernel version, which will be used later for modules
+  make olddefconfig prepare
+  make -s kernelrelease > version
+
+  # Host LDFLAGS or other LDFLAGS set by makepkg/user is not helpful for building kernel: it should links nothing outside of itself
+  unset LDFLAGS
+  # Only need normal Image, as most Amlogic devices does not need/support Image.gz
+  # Image and modules are built in the same run to make sure they're compatible with each other
+  # -@ enables symbols in dtbs, so overlay is possible
+  make ${MAKEFLAGS} DTC_FLAGS="-@" Image modules dtbs
+}
+
+_package() {
+  pkgdesc="The Linux Kernel and module - ${_desc}"
+  depends=(
+    'coreutils'
+    'initramfs'
+    'kmod'
+  )
+  optdepends=(
+    'uboot-legacy-initrd-hooks: to generate uboot legacy initrd images'
+    'linux-firmware: firmware images needed for some devices'
+    'linux-firmware-amlogic-ophub: complete firmware set for devices with Amlogic SoCs'
+    'wireless-regdb: to set the correct wireless channels of your country'
+  )
+
+  cd "${_srcname}"
+
+  # Install modules
+  echo "Installing modules..."
+  make INSTALL_MOD_PATH="${pkgdir}/usr" INSTALL_MOD_STRIP=1 modules_install
+
+  # Install DTBs, not to target pkg, but in srcdir, so the later package() routine could use them
+  make INSTALL_DTBS_PATH="${srcdir}/dtbs" dtbs_install
+
+  # Install pkgbase
+  local _dir_module="${pkgdir}/usr/lib/modules/$(<version)"
+  echo "${pkgbase}" | install -D -m 644 /dev/stdin "${_dir_module}/pkgbase"
+
+  # Install kernel image (this is technically not vmlinuz, but I name it this way to utilize mkinitcpio's existing hooks)
+  install -Dm644 arch/arm64/boot/Image "${_dir_module}/vmlinuz"
+
+  # Remove build and source links, which points to folders used when building (i.e. dead links)
+  rm -f "${_dir_module}/"{build,source}
+
+  # Install DTB
+  echo 'Installing DTBs for Amlogic and Rockchip SoCs...'
+  install -d -m 755 "${pkgdir}/boot/dtbs/${pkgbase}"
+  cp -t "${pkgdir}/boot/dtbs/${pkgbase}" -a "${srcdir}/dtbs/"{amlogic,rockchip}
+}
+
+_package-headers() {
+  pkgdesc="Header files and scripts for building modules for linux kernel - ${_desc}"
+  depends=('pahole')
+  
+  # Mostly copied from alarm's linux-aarch64 and modified
+  cd "${_srcname}"
+  local _builddir="${pkgdir}/usr/lib/modules/$(<version)/build"
+
+  echo "Installing build files..."
+  install -Dt "${_builddir}" -m644 .config Makefile Module.symvers System.map \
+    localversion.* version vmlinux
+  install -Dt "${_builddir}/kernel" -m644 kernel/Makefile
+  install -Dt "${_builddir}/arch/arm64" -m644 arch/arm64/Makefile
+  cp -t "${_builddir}" -a scripts
+
+  # required when DEBUG_INFO_BTF_MODULES is enabled
+  install -Dt "${_builddir}/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
+
+  echo "Installing headers..."
+  cp -t "${_builddir}" -a include
+  cp -t "${_builddir}/arch/arm64" -a arch/arm64/include
+  install -Dt "${_builddir}/arch/arm64/kernel" -m644 arch/arm64/kernel/asm-offsets.s
+
+
+  install -Dt "${_builddir}/drivers/md" -m644 drivers/md/*.h
+  install -Dt "${_builddir}/net/mac80211" -m644 net/mac80211/*.h
+
+  # https://bugs.archlinux.org/task/13146
+  install -Dt "${_builddir}/drivers/media/i2c" -m644 drivers/media/i2c/msp3400-driver.h
+
+  # https://bugs.archlinux.org/task/20402
+  install -Dt "${_builddir}/drivers/media/usb/dvb-usb" -m644 drivers/media/usb/dvb-usb/*.h
+  install -Dt "${_builddir}/drivers/media/dvb-frontends" -m644 drivers/media/dvb-frontends/*.h
+  install -Dt "${_builddir}/drivers/media/tuners" -m644 drivers/media/tuners/*.h
+
+  # https://bugs.archlinux.org/task/71392
+  install -Dt "${_builddir}/drivers/iio/common/hid-sensors" -m644 drivers/iio/common/hid-sensors/*.h
+
+  echo "Installing KConfig files..."
+  find . -name 'Kconfig*' -exec install -Dm644 {} "${_builddir}/{}" \;
+
+  echo "Removing unneeded architectures..."
+  local _arch
+  for _arch in "${_builddir}"/arch/*/; do
+    [[ ${_arch} = */arm64/ ]] && continue
+    echo "Removing $(basename "${_arch}")"
+    rm -r "${_arch}"
+  done
+
+  echo "Removing documentation..."
+  rm -r "${_builddir}/Documentation"
+
+  echo "Removing broken symlinks..."
+  find -L "${_builddir}" -type l -printf 'Removing %P\n' -delete
+
+  echo "Removing loose objects..."
+  find "${_builddir}" -type f -name '*.o' -printf 'Removing %P\n' -delete
+
+  echo "Stripping build tools..."
+  local file
+  while read -rd '' file; do
+    case "$(file -Sib "$file")" in
+      application/x-sharedlib\;*)      # Libraries (.so)
+        strip -v ${STRIP_SHARED} "$file" ;;
+      application/x-archive\;*)        # Libraries (.a)
+        strip -v ${STRIP_STATIC} "$file" ;;
+      application/x-executable\;*)     # Binaries
+        strip -v ${STRIP_BINARIES} "$file" ;;
+      application/x-pie-executable\;*) # Relocatable binaries
+        strip -v ${STRIP_SHARED} "$file" ;;
+    esac
+  done < <(find "${_builddir}" -type f -perm -u+x ! -name vmlinux -print0)
+
+  echo "Stripping vmlinux..."
+  strip -v $STRIP_STATIC "${_builddir}/vmlinux"
+
+  echo "Adding symlink..."
+  mkdir -p "${pkgdir}/usr/src"
+  ln -sr "${_builddir}" "$pkgdir/usr/src/$pkgbase"
+}
+
+for _p in "${pkgname[@]}"; do
+  eval "package_$_p() {
+    $(declare -f "_package${_p#$pkgbase}")
+    _package${_p#$pkgbase}
+  }"
+done
