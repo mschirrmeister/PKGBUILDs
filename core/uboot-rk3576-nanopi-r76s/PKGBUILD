@@ -3,8 +3,8 @@
 # Contributor: 
 
 pkgname=uboot-rk3576-nanopi-r76s
-pkgver=2026.01rc3
-pkgrel=2
+pkgver=2026.04rc2
+pkgrel=1
 _tfaver=2.14.0
 pkgdesc="U-Boot for FriendlyElec NanoPi R76S"
 arch=('aarch64')
@@ -20,21 +20,18 @@ source=("ftp://ftp.denx.de/pub/u-boot/u-boot-${pkgver/rc/-rc}.tar.bz2"
         "https://raw.githubusercontent.com/rockchip-linux/rkbin/57296ad286255d98a3d409036a4b8560b6013b7d/bin/rk35/rk3576_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin"
         "https://raw.githubusercontent.com/rockchip-linux/rkbin/cc3452e077f62a2e21e92fcc978d1b0ea19a1e33/bin/rk35/rk3576_bl31_v1.20.elf"
         'add-nanopi-r76s-support.patch'
-        'arm64-dts-rockchip-rk3576-nanopi-r76s-fix-sdmmc-sdhci-coexistence.patch'
 )
-sha256sums=('fe26d29ef4ef2fcf4a54b1c7d7280adc6f15755354a9ced85f5677b17fb17bbc'
+sha256sums=('c89f43b2a6891e4d13e9cb193bd59f0a32d9376edf029a282150086f1b88e8d9'
             'd44936677a63c5216ffc151ae7711d458c992ef159a9df271fd9429f0a1cb5e5'
             '7403cf1663d4b0c9d7c692014e0852e60f0d3977209ec75fa755c293f54e2d50'
             '34f875f6cc4fd2a633e08dcbe9f4f031ddf95a1bf6d5eaeb7621ac750d997cac'
-            'a1a094159f3f8d4b4e36da82a2798b53a48e0dcd06ee250aa2f5bc5f70311da9'
-            '69513c7caf05450a91e84e209d8e496750d9b02fd5562641c33ed8058fc7d06d')
+            'a1a094159f3f8d4b4e36da82a2798b53a48e0dcd06ee250aa2f5bc5f70311da9')
 
 prepare() {
   cd u-boot-${pkgver/rc/-rc}
 
   echo "Patching u-boot"
   cat ../add-nanopi-r76s-support.patch | patch -p1
-  cat ../arm64-dts-rockchip-rk3576-nanopi-r76s-fix-sdmmc-sdhci-coexistence.patch | patch -p1
 }
 
 build() {
@@ -106,7 +103,7 @@ build() {
   # We don't use a pre-build version of the "bl31" file.
   # We use the mainline of "bl31" that is build from the ATF.
 #  make EXTRAVERSION=-${pkgrel} BL31=rk3576_bl31_v1.20.elf ROCKCHIP_TPL=rk3576_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin
-  make EXTRAVERSION=-${pkgrel} BL31=bl31.elf ROCKCHIP_TPL=rk3576_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin
+  make EXTRAVERSION=-rc2-${pkgrel} BL31=bl31.elf ROCKCHIP_TPL=rk3576_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin
 }
 
 package() {
