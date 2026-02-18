@@ -8,7 +8,7 @@ pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=6.18.11
+pkgver=6.18.12
 pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
@@ -40,8 +40,8 @@ source=(
   '2005-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-Nanopi-R76s.patch'
   '2006-mmc-dw_mmc-rockchip-Add-memory-clock-auto-gating-support.patch'
 )
-sha256sums=('38af38924010279322df1d923e10a5a544f74eb2636ca0dd8df5c039f4613af7'
-            'dc09a58e6c3bb23a698b9eb9c7e32282369539e888fffb8ff0122008cc6ddb70'
+sha256sums=('e003294ad4c2c2ac5bb77fbb8259511134f51d987b3212516832dc4b0c83f1ea'
+            '50b29f693938e8ddd70713badd384630272423be3467c3747c7907d492aecbce'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
