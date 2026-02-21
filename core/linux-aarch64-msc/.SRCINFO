@@ -1,6 +1,6 @@
 pkgbase = linux-aarch64-msc
 	pkgver = 6.19.3
-	pkgrel = 1
+	pkgrel = 2
 	url = https://kernel.org
 	arch = aarch64
 	license = GPL2
@@ -27,6 +27,7 @@ pkgbase = linux-aarch64-msc
 	source = 2003-mmc-dw_mmc-rockchip-Fix-runtime-PM-support-for-internal-phase-support.patch
 	source = 2004-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-EVB1.patch
 	source = 2005-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-Nanopi-R76s.patch
+	source = 9000-v2-Fix-invariant-violation-for-single-value-tnums.patch
 	sha256sums = 0e474968adfcbee32916fd01a89d8ccfd1168d8d32569e76a5c664c793198ebe
 	sha256sums = 38757a52032a82423de5568b9d6a19833a81483bfdef99bcaea3fe869603ef22
 	sha256sums = 0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb
@@ -44,6 +45,7 @@ pkgbase = linux-aarch64-msc
 	sha256sums = e129a1348b56676bdde1c40e9efbadb7346f2c2900fc829cad8cd41a6f99abeb
 	sha256sums = fb407ffac73c59e55428b47bb91132c9721c7141f2fb15f286b4243c9c6a3f3d
 	sha256sums = 1d934365993dec1f20aced38a67485860c534a26aac3794acf972cecc2783fdf
+	sha256sums = 0c6ae79b9b14448c6608fcbb35fb8f39142b7d0efbfd39f420c9e90c0af90143
 
 pkgname = linux-aarch64-msc
 	pkgdesc = The Linux Kernel and module - almost mainline but with MSC's patches, for Rockchip and Amlogic

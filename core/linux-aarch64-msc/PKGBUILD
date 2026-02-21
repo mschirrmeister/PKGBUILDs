@@ -9,7 +9,7 @@ pkgname=(
   "${pkgbase}-headers"
 )
 pkgver=6.19.3
-pkgrel=1
+pkgrel=2
 arch=('aarch64')
 url="https://kernel.org"
 license=('GPL2')
@@ -37,6 +37,7 @@ source=(
   '2003-mmc-dw_mmc-rockchip-Fix-runtime-PM-support-for-internal-phase-support.patch'
   '2004-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-EVB1.patch'
   '2005-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-Nanopi-R76s.patch'
+  '9000-v2-Fix-invariant-violation-for-single-value-tnums.patch'
 )
 sha256sums=('0e474968adfcbee32916fd01a89d8ccfd1168d8d32569e76a5c664c793198ebe'
             '38757a52032a82423de5568b9d6a19833a81483bfdef99bcaea3fe869603ef22'
@@ -54,7 +55,8 @@ sha256sums=('0e474968adfcbee32916fd01a89d8ccfd1168d8d32569e76a5c664c793198ebe'
             '9a6046f81b12434c18778261723d9c33ed369d4b4ae37392e09f99c18ae1dad4'
             'e129a1348b56676bdde1c40e9efbadb7346f2c2900fc829cad8cd41a6f99abeb'
             'fb407ffac73c59e55428b47bb91132c9721c7141f2fb15f286b4243c9c6a3f3d'
-            '1d934365993dec1f20aced38a67485860c534a26aac3794acf972cecc2783fdf')
+            '1d934365993dec1f20aced38a67485860c534a26aac3794acf972cecc2783fdf'
+            '0c6ae79b9b14448c6608fcbb35fb8f39142b7d0efbfd39f420c9e90c0af90143')
 
 prepare() {
   cd "${_srcname}"
@@ -75,6 +77,7 @@ prepare() {
   cat ../2003-mmc-dw_mmc-rockchip-Fix-runtime-PM-support-for-internal-phase-support.patch | patch -p1
   cat ../2004-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-EVB1.patch | patch -p1
   cat ../2005-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-Nanopi-R76s.patch | patch -p1
+  cat ../9000-v2-Fix-invariant-violation-for-single-value-tnums.patch | patch -p1
 
   cp ../rk3399-orangepi-4-lts.dts arch/arm64/boot/dts/rockchip/
 
