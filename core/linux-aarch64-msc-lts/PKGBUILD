@@ -9,7 +9,7 @@ pkgname=(
   "${pkgbase}-headers"
 )
 pkgver=6.18.13
-pkgrel=1
+pkgrel=2
 arch=('aarch64')
 url="https://kernel.org"
 license=('GPL2')
@@ -39,6 +39,7 @@ source=(
   '2004-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-EVB1.patch'
   '2005-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-Nanopi-R76s.patch'
   '2006-mmc-dw_mmc-rockchip-Add-memory-clock-auto-gating-support.patch'
+  '9000-v2-Fix-invariant-violation-for-single-value-tnums.patch'
 )
 sha256sums=('ed2c3c55fd38e6836c094fce356f2567f9516130b73354a29857960368c5687f'
             '1fe7f969827ab60f50048134d317f6260fe877d0b83c4b95fd88799e98b2a0e6'
@@ -58,7 +59,8 @@ sha256sums=('ed2c3c55fd38e6836c094fce356f2567f9516130b73354a29857960368c5687f'
             'e129a1348b56676bdde1c40e9efbadb7346f2c2900fc829cad8cd41a6f99abeb'
             'fb407ffac73c59e55428b47bb91132c9721c7141f2fb15f286b4243c9c6a3f3d'
             '1d934365993dec1f20aced38a67485860c534a26aac3794acf972cecc2783fdf'
-            '75f0399e3bf3d8d26dcd8c56f8a5aab44a3e0cda5f4b536494a39d1ff29c6a9d')
+            '75f0399e3bf3d8d26dcd8c56f8a5aab44a3e0cda5f4b536494a39d1ff29c6a9d'
+            '0c6ae79b9b14448c6608fcbb35fb8f39142b7d0efbfd39f420c9e90c0af90143')
 
 prepare() {
   cd "${_srcname}"
@@ -85,6 +87,7 @@ prepare() {
   cat ../2004-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-EVB1.patch | patch -p1
   cat ../2005-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-Nanopi-R76s.patch | patch -p1
   cat ../2006-mmc-dw_mmc-rockchip-Add-memory-clock-auto-gating-support.patch | patch -p1
+  cat ../9000-v2-Fix-invariant-violation-for-single-value-tnums.patch | patch -p1
 
   echo "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
