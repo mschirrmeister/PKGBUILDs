@@ -8,7 +8,7 @@ pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=6.19.2
+pkgver=6.19.3
 pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
@@ -38,8 +38,8 @@ source=(
   '2004-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-EVB1.patch'
   '2005-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-Nanopi-R76s.patch'
 )
-sha256sums=('88611981582cceb7cdd4d688d9d881073cf4977176252193a23ca6d4b982ee5a'
-            '8ffcf18e4340f53e91c0294daa1c7c5ea145ea44a9bbffabda6a0edbd1cf3209'
+sha256sums=('0e474968adfcbee32916fd01a89d8ccfd1168d8d32569e76a5c664c793198ebe'
+            '38757a52032a82423de5568b9d6a19833a81483bfdef99bcaea3fe869603ef22'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
