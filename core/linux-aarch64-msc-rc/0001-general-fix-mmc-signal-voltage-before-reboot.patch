@@ -1,3 +1,5 @@
+# https://patchwork.kernel.org/project/linux-rockchip/patch/AM3PR03MB09664161A7FA2BD68B2800A7AC620@AM3PR03MB0966.eurprd03.prod.outlook.com/
+
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Sun, 17 Feb 2019 22:14:38 +0000
@@ -26,9 +28,9 @@ diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
 index 111111111111..222222222222 100644
 --- a/drivers/mmc/core/core.c
 +++ b/drivers/mmc/core/core.c
-@@ -1373,6 +1373,14 @@ void mmc_power_off(struct mmc_host *host)
- 	if (host->ios.power_mode == MMC_POWER_OFF)
- 		return;
+@@ -1373,6 +1373,14 @@
+	if (host->ios.power_mode == MMC_POWER_OFF)
+		return;
 
 +	mmc_set_initial_signal_voltage(host);
 +
@@ -38,9 +40,6 @@ index 111111111111..222222222222 100644
 +	 */
 +	mmc_delay(host->ios.power_delay_ms);
 +
- 	mmc_pwrseq_power_off(host);
+	mmc_pwrseq_power_off(host);
 
- 	host->ios.clock = 0;
---
-Armbian
-
+	host->ios.clock = 0;
