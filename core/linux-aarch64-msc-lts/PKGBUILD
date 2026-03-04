@@ -8,8 +8,8 @@ pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=6.18.13
-pkgrel=2
+pkgver=6.18.15
+pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
 license=('GPL2')
@@ -39,10 +39,10 @@ source=(
   '2004-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-EVB1.patch'
   '2005-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-Nanopi-R76s.patch'
   '2006-mmc-dw_mmc-rockchip-Add-memory-clock-auto-gating-support.patch'
-  '9000-v2-Fix-invariant-violation-for-single-value-tnums.patch'
+  '9000-v3-Fix-invariant-violation-for-single-value-tnums.patch'
 )
-sha256sums=('ed2c3c55fd38e6836c094fce356f2567f9516130b73354a29857960368c5687f'
-            '1fe7f969827ab60f50048134d317f6260fe877d0b83c4b95fd88799e98b2a0e6'
+sha256sums=('7c716216c3c4134ed0de69195701e677577bbcdd3979f331c182acd06bf2f170'
+            '4d26bfb4c8180510c6e631455d8a3939965f99486a6ce3e8aa892d16d476dee3'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
@@ -60,7 +60,7 @@ sha256sums=('ed2c3c55fd38e6836c094fce356f2567f9516130b73354a29857960368c5687f'
             'fb407ffac73c59e55428b47bb91132c9721c7141f2fb15f286b4243c9c6a3f3d'
             '1d934365993dec1f20aced38a67485860c534a26aac3794acf972cecc2783fdf'
             '75f0399e3bf3d8d26dcd8c56f8a5aab44a3e0cda5f4b536494a39d1ff29c6a9d'
-            '0c6ae79b9b14448c6608fcbb35fb8f39142b7d0efbfd39f420c9e90c0af90143')
+            '26a9868c652461e3ee217f15f1cb8749a66e2e0b08ba6dfc77d348183d9fcb51')
 
 prepare() {
   cd "${_srcname}"
@@ -87,7 +87,7 @@ prepare() {
   cat ../2004-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-EVB1.patch | patch -p1
   cat ../2005-arm64-dts-rockchip-Fix-SD-card-support-for-RK3576-Nanopi-R76s.patch | patch -p1
   cat ../2006-mmc-dw_mmc-rockchip-Add-memory-clock-auto-gating-support.patch | patch -p1
-  cat ../9000-v2-Fix-invariant-violation-for-single-value-tnums.patch | patch -p1
+  cat ../9000-v3-Fix-invariant-violation-for-single-value-tnums.patch | patch -p1
 
   echo "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
