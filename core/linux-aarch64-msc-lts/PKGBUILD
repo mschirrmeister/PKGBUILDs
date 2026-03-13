@@ -8,7 +8,7 @@ pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=6.18.16
+pkgver=6.18.17
 pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
@@ -35,10 +35,9 @@ source=(
   '2000-Add-FriendlyElec-NanoPi-R76S.patch'
   '2003-mmc-dw_mmc-rockchip-Fix-runtime-PM-support-for-internal-phase-support.patch'
   '2006-mmc-dw_mmc-rockchip-Add-memory-clock-auto-gating-support.patch'
-  '9000-v3-Fix-invariant-violation-for-single-value-tnums.patch'
 )
-sha256sums=('4f21c01f4d04c1d1b3ed794153f8900802c92497be620b07c4869530f2d28ee3'
-            'f8485bef528df9cc9c0c66310a11896fae32971b12bbf00d8ad6d08f8c7c6f60'
+sha256sums=('2bff97ab0590bc5ccdd5b82286d5ef324828672126ebddc88d062e3ac65af80d'
+            'a293608126ebb4125041217c8c520f9c2153565959de3eea84f5700762d9aa1f'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
@@ -51,8 +50,7 @@ sha256sums=('4f21c01f4d04c1d1b3ed794153f8900802c92497be620b07c4869530f2d28ee3'
             'bcf7c0f42dae5a6dce3fc20ce83b5b83fca3646ebe09b1a4e7a1a82e573a2d87'
             '1f564b2fd36eff15af3ef49e0935782900093e205d84d21edcdcdaa7dbe8eb15'
             'e129a1348b56676bdde1c40e9efbadb7346f2c2900fc829cad8cd41a6f99abeb'
-            '75f0399e3bf3d8d26dcd8c56f8a5aab44a3e0cda5f4b536494a39d1ff29c6a9d'
-            '26a9868c652461e3ee217f15f1cb8749a66e2e0b08ba6dfc77d348183d9fcb51')
+            '75f0399e3bf3d8d26dcd8c56f8a5aab44a3e0cda5f4b536494a39d1ff29c6a9d')
 
 prepare() {
   cd "${_srcname}"
@@ -74,7 +72,6 @@ prepare() {
   cat ../2000-Add-FriendlyElec-NanoPi-R76S.patch | patch -p1
   cat ../2003-mmc-dw_mmc-rockchip-Fix-runtime-PM-support-for-internal-phase-support.patch | patch -p1
   cat ../2006-mmc-dw_mmc-rockchip-Add-memory-clock-auto-gating-support.patch | patch -p1
-  cat ../9000-v3-Fix-invariant-violation-for-single-value-tnums.patch | patch -p1
 
   echo "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
