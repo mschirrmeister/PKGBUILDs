@@ -8,7 +8,7 @@ pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=6.18.17
+pkgver=6.18.18
 pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
@@ -36,8 +36,8 @@ source=(
   '2003-mmc-dw_mmc-rockchip-Fix-runtime-PM-support-for-internal-phase-support.patch'
   '2006-mmc-dw_mmc-rockchip-Add-memory-clock-auto-gating-support.patch'
 )
-sha256sums=('2bff97ab0590bc5ccdd5b82286d5ef324828672126ebddc88d062e3ac65af80d'
-            'a293608126ebb4125041217c8c520f9c2153565959de3eea84f5700762d9aa1f'
+sha256sums=('f4855f382c1b735c84072bdef36db5bcd5dc7b0c37e42f5104317149a0a486ef'
+            'a4ba98f3a0a98bd125ad34f48c32f6c0bfe591a765288c04a402443d3bfb3924'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
