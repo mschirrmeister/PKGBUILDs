@@ -12,7 +12,7 @@ pkgname=(
   "${pkgbase}-headers"
 )
 pkgver=${_rcver}.rc${_rcrel}
-pkgrel=1
+pkgrel=2
 arch=('aarch64')
 url="https://kernel.org"
 license=('GPL2')
@@ -36,7 +36,7 @@ source=(
   'rk3399-add-sclk-i2sout-src-clock.patch'
 )
 sha256sums=('a5c8f3db2c5cc44ab657cbe79a00455bc6ed28c9fbcb3ffb9990e0cee2670e35'
-            'ba28f3396dc7d6a2dbc1cd291c436ab1d3e55b5cc0b79e43c67e6982a644f231'
+            'aca5518023c97bac4da3f118ac72da6879b38e691916c45a45cac7228045dc29'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
