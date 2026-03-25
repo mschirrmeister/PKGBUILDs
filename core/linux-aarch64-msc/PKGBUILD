@@ -9,7 +9,7 @@ pkgname=(
   "${pkgbase}-headers"
 )
 pkgver=6.19.8
-pkgrel=1
+pkgrel=2
 arch=('aarch64')
 url="https://kernel.org"
 license=('GPL2')
@@ -35,7 +35,7 @@ source=(
   '2003-mmc-dw_mmc-rockchip-Fix-runtime-PM-support-for-internal-phase-support.patch'
 )
 sha256sums=('aada4722db8bcfa0b9732851856d405082b6a4fa2e3ab067be8db17cdd115b38'
-            '989e78adb5d2cd54c881bb798b4c09b9a384247e56cd4b9c4f70efdd5f7fe23b'
+            '25c81a6f626303b68d1f7642d694b116f1c8330dd91877dc74f65cd3d6f766d1'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
