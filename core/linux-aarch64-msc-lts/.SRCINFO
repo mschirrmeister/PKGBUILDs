@@ -1,6 +1,6 @@
 pkgbase = linux-aarch64-msc-lts
 	pkgver = 6.18.18
-	pkgrel = 1
+	pkgrel = 2
 	url = https://kernel.org
 	arch = aarch64
 	license = GPL2
@@ -26,7 +26,7 @@ pkgbase = linux-aarch64-msc-lts
 	source = 2003-mmc-dw_mmc-rockchip-Fix-runtime-PM-support-for-internal-phase-support.patch
 	source = 2006-mmc-dw_mmc-rockchip-Add-memory-clock-auto-gating-support.patch
 	sha256sums = f4855f382c1b735c84072bdef36db5bcd5dc7b0c37e42f5104317149a0a486ef
-	sha256sums = a4ba98f3a0a98bd125ad34f48c32f6c0bfe591a765288c04a402443d3bfb3924
+	sha256sums = 0f27eb4ddcaf83e267376b14d03dd8c9c44db9bf1c6d5f1a6c49f7f90be14364
 	sha256sums = 0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb
 	sha256sums = a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365
 	sha256sums = 8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389
