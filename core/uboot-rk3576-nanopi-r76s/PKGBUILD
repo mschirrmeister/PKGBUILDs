@@ -3,7 +3,7 @@
 # Contributor: 
 
 pkgname=uboot-rk3576-nanopi-r76s
-pkgver=2026.04rc3
+pkgver=2026.04rc5
 pkgrel=1
 _tfaver=2.14.0
 pkgdesc="U-Boot for FriendlyElec NanoPi R76S"
@@ -21,7 +21,7 @@ source=("ftp://ftp.denx.de/pub/u-boot/u-boot-${pkgver/rc/-rc}.tar.bz2"
         "https://raw.githubusercontent.com/rockchip-linux/rkbin/cc3452e077f62a2e21e92fcc978d1b0ea19a1e33/bin/rk35/rk3576_bl31_v1.20.elf"
         'add-nanopi-r76s-support.patch'
 )
-sha256sums=('2eac446c5fa882e766fed6200056c66c04656c6323c66036cd3f927368d4a88b'
+sha256sums=('edd354396e88290e3c2de89c74d9d773d0da4ee4f5ef6a911ab3564212ceb68f'
             'd44936677a63c5216ffc151ae7711d458c992ef159a9df271fd9429f0a1cb5e5'
             '7403cf1663d4b0c9d7c692014e0852e60f0d3977209ec75fa755c293f54e2d50'
             '34f875f6cc4fd2a633e08dcbe9f4f031ddf95a1bf6d5eaeb7621ac750d997cac'
