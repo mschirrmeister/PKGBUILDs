@@ -8,8 +8,8 @@ pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=6.19.8
-pkgrel=2
+pkgver=6.19.11
+pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
 license=('GPL2')
@@ -32,10 +32,9 @@ source=(
   'rk3399-sd-pwr-pinctrl.patch'
   'rk3399-unlock-temperature.patch'
   'rk3399-add-sclk-i2sout-src-clock.patch'
-  '2003-mmc-dw_mmc-rockchip-Fix-runtime-PM-support-for-internal-phase-support.patch'
 )
-sha256sums=('aada4722db8bcfa0b9732851856d405082b6a4fa2e3ab067be8db17cdd115b38'
-            '25c81a6f626303b68d1f7642d694b116f1c8330dd91877dc74f65cd3d6f766d1'
+sha256sums=('20039d7b6b256c08be2f8fac43c3ff9a620308c703c643cf2f80c3910b9bd59b'
+            '2821636ecb528fb0e27f622fdf07740a5523217635d7855410ca8c5ff63f87ea'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
@@ -45,8 +44,7 @@ sha256sums=('aada4722db8bcfa0b9732851856d405082b6a4fa2e3ab067be8db17cdd115b38'
             '2d57b54f7d59969640e9c80e9f3e23230619fcd056d69995416f4781f6b3ae64'
             'e806fbe6129275bc159f7dde2a31620d906a8a8090b4bd03b6af35f69fc7951a'
             '88111ef3c9079d36287dff21095acf059950f61d5401c7de6e7d67b46e020da9'
-            'bcf7c0f42dae5a6dce3fc20ce83b5b83fca3646ebe09b1a4e7a1a82e573a2d87'
-            'e129a1348b56676bdde1c40e9efbadb7346f2c2900fc829cad8cd41a6f99abeb')
+            'bcf7c0f42dae5a6dce3fc20ce83b5b83fca3646ebe09b1a4e7a1a82e573a2d87')
 
 prepare() {
   cd "${_srcname}"
@@ -62,7 +60,6 @@ prepare() {
   cat ../rk3399-sd-pwr-pinctrl.patch | patch -p1
   cat ../rk3399-unlock-temperature.patch | patch -p1
   cat ../rk3399-add-sclk-i2sout-src-clock.patch | patch -p1
-  cat ../2003-mmc-dw_mmc-rockchip-Fix-runtime-PM-support-for-internal-phase-support.patch | patch -p1
 
   cp ../rk3399-orangepi-4-lts.dts arch/arm64/boot/dts/rockchip/
 
