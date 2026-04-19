@@ -8,7 +8,7 @@ pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=6.19.12
+pkgver=6.19.13
 pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
@@ -33,8 +33,8 @@ source=(
   'rk3399-unlock-temperature.patch'
   'rk3399-add-sclk-i2sout-src-clock.patch'
 )
-sha256sums=('ce5c4f1205f9729286b569b037649591555f31ca1e03cc504bd3b70b8e58a8d5'
-            '6599e595df288de4dd090b73792922d789120429d33716a81b4068a5afe56ffe'
+sha256sums=('0559b1fea740e71714b4368023902b7d098c45ac1faa3176eab392c867645648'
+            '2548bdc72fe6fcb28bae71bcd25ea721c48c0aac382246b855778d41df541ac3'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
