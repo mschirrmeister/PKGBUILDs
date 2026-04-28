@@ -1,23 +1,14 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Marco Schirrmeister <mschirrmeister@gmail.com>
-Date: Tue, 28 Apr 2026 09:00:00 +0200
-Subject: [PATCH] drivers: power: reset: meson64: Fix SD reset for Odroid-HC4 (7.1)
-
-This patch re-implements the Meson64 reboot fix, specifically isolating 
-the hardware reset hack for the Odroid-HC4. 
-
-Original sequence logic by Patrick Yavitz, ported to Kernel 7.1
-to bypass regulator ownership locks using hardcoded global 
-IDs (600, 603, 611). A compatibility check ensures the SD reset hack only 
-executes on HC4 hardware, maintaining safety for other Meson64 boards.
-
-Kernel 7.1 has deprecated 'of_gpio.h'. This version uses hardcoded 
-global IDs (600, 603, 611) to pulse the hardware reset at the last 
-millisecond of the reboot sequence.
-
-Signed-off-by: Marco Schirrmeister <mschirrmeister@gmail.com>
+From: Patrick Yavitz <pyavitz@gmail.com>
+Date: Thu, 1 Jun 2023 06:32:23 +0200
+Subject: pyavitz meson64-generalized `odroid-reboot` driver
 
 ---
+ drivers/power/reset/Kconfig          |   7 +
+ drivers/power/reset/Makefile         |   1 +
+ drivers/power/reset/meson64-reboot.c | 186 ++++++++++
+ 3 files changed, 194 insertions(+)
+
 diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
 index 111111111111..222222222222 100644
 --- a/drivers/power/reset/Kconfig
@@ -53,14 +44,13 @@ new file mode 100644
 index 000000000000..111111111111
 --- /dev/null
 +++ b/drivers/power/reset/meson64-reboot.c
-@@ -0,0 +1,132 @@
+@@ -0,0 +1,186 @@
 +// SPDX-License-Identifier: (GPL-2.0)
 +/*
 + * drivers/power/reset/meson64-reboot.c
 + *
 + * Copyright (C) 2017 Amlogic, Inc. All rights reserved.
 + * Copyright (C) 2023 Ash Hughes (sehguh.hsa@gmail.com)
-+ * Ported to Kernel 7.1 by Marco Schirrmeister <mschirrmeister@gmail.com>
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -75,61 +65,103 @@ index 000000000000..111111111111
 + */
 +
 +#include <linux/delay.h>
++#include <linux/err.h>
 +#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/io.h>
 +#include <linux/of.h>
 +#include <linux/platform_device.h>
 +#include <linux/module.h>
 +#include <linux/reboot.h>
++
++#include <asm/system_misc.h>
++
++#include <asm/compiler.h>
++#include <linux/kdebug.h>
 +#include <linux/arm-smccc.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
 +
-+static bool is_hc4;
++#include <linux/gpio.h>
++#include <linux/of_gpio.h>
 +
-+/* These are the confirmed IDs for your HC4 on Kernel 7.1 */
-+#define VMMC_ID 600
-+#define VQSW_ID 603
-+#define VQEN_ID 611
++int sd_vqsw;
++int sd_vmmc;
++int sd_vqen;
 +
-+static noinline int __invoke_psci_fn_smc(u64 function_id, u64 arg0, u64 arg1, u64 arg2)
++static u32 psci_function_id_restart;
++static u32 psci_function_id_poweroff;
++
++#define CHECK_RET(ret) { \
++	if (ret) \
++	pr_err("[%s] gpio op failed(%d) at line %d\n",\
++			__func__, ret, __LINE__); \
++}
++
++static noinline int __invoke_psci_fn_smc(u64 function_id, u64 arg0, u64 arg1,
++					 u64 arg2)
 +{
 +	struct arm_smccc_res res;
-+	arm_smccc_smc((unsigned long)function_id, (unsigned long)arg0, (unsigned long)arg1, (unsigned long)arg2, 0, 0, 0, 0, &res);
++
++	arm_smccc_smc((unsigned long)function_id,
++			(unsigned long)arg0,
++			(unsigned long)arg1,
++			(unsigned long)arg2,
++			0, 0, 0, 0, &res);
 +	return res.a0;
 +}
 +
-+static void meson64_card_reset(void)
++void meson64_card_reset(void)
 +{
-+	/* If we aren't on an HC4, we get out of the car immediately */
-+	if (!is_hc4)
++	int ret = 0;
++
++	if ((sd_vqsw == 0) && (sd_vmmc == 0))
 +		return;
 +
-+	struct gpio_desc *vqsw = gpio_to_desc(VQSW_ID);
-+	struct gpio_desc *vmmc = gpio_to_desc(VMMC_ID);
-+	struct gpio_desc *vqen = gpio_to_desc(VQEN_ID);
-+
-+	if (!vqsw || !vmmc)
-+		return;
-+
-+	if (vqen) {
-+		gpiod_direction_output_raw(vqsw, 0);
-+		gpiod_direction_output_raw(vqen, 0);
-+		gpiod_direction_output_raw(vmmc, 0);
-+		mdelay(100);
-+		gpiod_direction_input(vqen);
-+		gpiod_direction_input(vmmc);
-+		gpiod_direction_input(vqsw);
++	if (sd_vqen == 0) {
++		gpio_free(sd_vqsw);
++		gpio_free(sd_vmmc);
++		ret = gpio_request_one(sd_vqsw,
++				GPIOF_OUT_INIT_LOW, "REBOOT");
++		CHECK_RET(ret);
++		mdelay(10);
++		ret = gpio_direction_output(sd_vqsw, 1);
++		CHECK_RET(ret);
++		ret = gpio_request_one(sd_vmmc,
++				GPIOF_OUT_INIT_LOW, "REBOOT");
++		CHECK_RET(ret);
++		mdelay(10);
++		ret = gpio_direction_output(sd_vqsw, 0);
++		CHECK_RET(ret);
++		ret = gpio_direction_output(sd_vmmc, 1);
++		CHECK_RET(ret);
++		mdelay(5);
++		gpio_free(sd_vqsw);
++		gpio_free(sd_vmmc);
 +	} else {
-+		gpiod_direction_output_raw(vqsw, 0);
-+		mdelay(10);
-+		gpiod_set_raw_value(vqsw, 1);
-+		mdelay(10);
-+		gpiod_direction_output_raw(vmmc, 0);
-+		mdelay(10);
-+		gpiod_set_raw_value(vqsw, 0);
-+		gpiod_set_raw_value(vmmc, 1);
++		gpio_free(sd_vqsw);
++		gpio_free(sd_vqen);
++		gpio_free(sd_vmmc);
++
++		ret = gpio_request_one(sd_vqsw,
++				GPIOF_OUT_INIT_LOW, "REBOOT");
++		CHECK_RET(ret);
++		ret = gpio_request_one(sd_vqen,
++				GPIOF_OUT_INIT_LOW, "REBOOT");
++		CHECK_RET(ret);
++		ret = gpio_request_one(sd_vmmc,
++				GPIOF_OUT_INIT_LOW, "REBOOT");
++		CHECK_RET(ret);
++		mdelay(100);
++		ret = gpio_direction_input(sd_vqen);
++		CHECK_RET(ret);
++		ret = gpio_direction_input(sd_vmmc);
++		CHECK_RET(ret);
++		ret = gpio_direction_input(sd_vqsw);
++		CHECK_RET(ret);
++		mdelay(5);
++		gpio_free(sd_vqen);
++		gpio_free(sd_vmmc);
++		gpio_free(sd_vqsw);
 +	}
-+	mdelay(5);
 +}
 +
 +static int do_meson64_restart(struct notifier_block *this, unsigned long mode, void *cmd)
@@ -146,23 +178,36 @@ index 000000000000..111111111111
 +static void do_meson64_poweroff(void)
 +{
 +	meson64_card_reset();
++
 +	__invoke_psci_fn_smc(0x82000042, 1, 0, 0);
 +}
 +
 +static int meson64_restart_probe(struct platform_device *pdev)
 +{
++	struct device_node *of_node;
 +	u32 id;
-+	if (!of_property_read_u32(pdev->dev.of_node, "sys_reset", &id))
++
++	if (!of_property_read_u32(pdev->dev.of_node, "sys_reset", &id)) {
++		psci_function_id_restart = id;
 +		register_restart_handler(&meson64_restart_handler);
-+
-+	if (!of_property_read_u32(pdev->dev.of_node, "sys_poweroff", &id))
-+		pm_power_off = do_meson64_poweroff;
-+
-+	/*  Only flag for the GPIO hack if we are on the HC4 */
-+	if (of_machine_is_compatible("hardkernel,odroid-hc4")) {
-+		is_hc4 = true;
-+		pr_info("MESON64-REBOOT: Odroid-HC4 detected. SD reset hack active.\n");
 +	}
++
++	if (!of_property_read_u32(pdev->dev.of_node, "sys_poweroff", &id)) {
++		psci_function_id_poweroff = id;
++		pm_power_off = do_meson64_poweroff;
++	}
++
++	of_node = pdev->dev.of_node;
++
++	sd_vqsw = of_get_named_gpio(of_node, "sd-vqsw", 0);
++	if (!gpio_is_valid(sd_vqsw)) sd_vqsw = 0;
++
++	sd_vmmc = of_get_named_gpio(of_node, "sd-vmmc", 0);
++	if (!gpio_is_valid(sd_vmmc)) sd_vmmc = 0;
++
++	sd_vqen = of_get_named_gpio(of_node, "sd-vqen", 0);
++	if (!gpio_is_valid(sd_vqen)) sd_vqen = 0;
++
 +	return 0;
 +}
 +
@@ -180,9 +225,12 @@ index 000000000000..111111111111
 +	},
 +};
 +
-+static int __init meson64_restart_init(void) { return platform_driver_register(&meson64_restart_driver); }
++static int __init meson64_restart_init(void)
++{
++	return platform_driver_register(&meson64_restart_driver);
++}
 +device_initcall(meson64_restart_init);
 +
-+MODULE_AUTHOR("Amlogic, Inc.");
-+MODULE_DESCRIPTION("Meson64 reboot/power-off driver with HC4-specific SD reset hack");
-+MODULE_LICENSE("GPL v2");
+-- 
+Armbian
+
