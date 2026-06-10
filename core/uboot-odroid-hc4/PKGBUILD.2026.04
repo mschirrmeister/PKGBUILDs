@@ -2,7 +2,7 @@
 # Maintainer: Marco Schirrmeister <mschirrmeister@gmail.com>
 
 pkgname=uboot-odroid-hc4-mainline
-pkgver=2026.07rc4
+pkgver=2026.04
 pkgrel=1
 pkgdesc="Mainline U-Boot for ODROID-HC4"
 arch=('aarch64')
@@ -17,9 +17,11 @@ conflicts=('uboot')
 source=(
   "ftp://ftp.denx.de/pub/u-boot/u-boot-${pkgver/rc/-rc}.tar.bz2"
   "git+https://github.com/LibreELEC/amlogic-boot-fip.git"
+  '0001-odroid-sm1-hc4-regulator-boot-on.patch'
 )
-md5sums=('16e3473589bffb77313a4bb2431ffd64'
-         'SKIP')
+md5sums=('79f208e510be1602aaba446fcad3b028'
+         'SKIP'
+         'c75cc538fd66e2bebddeebff260b8a69')
 
 build() {
   # Path to the LibreELEC amlogic-boot-fip source directory where build scripts and proprietary binaries reside
@@ -28,13 +30,15 @@ build() {
 
   cd u-boot-${pkgver/rc/-rc}
 
+  cat ../0001-odroid-sm1-hc4-regulator-boot-on.patch | patch -p1
+
   unset CFLAGS CXXFLAGS CPPFLAGS LDFLAGS
   export CROSS_COMPILE=
 
   make distclean
   make odroid-hc4_defconfig
   echo 'CONFIG_IDENT_STRING="Arch Linux ARM"' >> .config
-  make -j$(nproc) EXTRAVERSION=-rc4-msc-${pkgrel}
+  make -j$(nproc) EXTRAVERSION=-msc-${pkgrel}
 
   cp u-boot.bin ../${_fip_board_dir}/bl33.bin
 
