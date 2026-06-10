@@ -1,7 +1,7 @@
 pkgbase = uboot-rk3576-nanopi-r76s
 	pkgdesc = U-Boot for FriendlyElec NanoPi R76S
 	pkgver = 2026.04
-	pkgrel = 1
+	pkgrel = 2
 	url = http://www.denx.de/wiki/U-Boot/WebHome
 	install = uboot-rk3576-nanopi-r76s.install
 	arch = aarch64

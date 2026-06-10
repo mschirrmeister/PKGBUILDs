@@ -4,7 +4,7 @@
 
 pkgname=uboot-rk3576-nanopi-r76s
 pkgver=2026.04
-pkgrel=1
+pkgrel=2
 _tfaver=2.14.0
 pkgdesc="U-Boot for FriendlyElec NanoPi R76S"
 arch=('aarch64')
@@ -103,7 +103,7 @@ build() {
   # We don't use a pre-build version of the "bl31" file.
   # We use the mainline of "bl31" that is build from the ATF.
 #  make EXTRAVERSION=-${pkgrel} BL31=rk3576_bl31_v1.20.elf ROCKCHIP_TPL=rk3576_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin
-  make EXTRAVERSION=-rc2-${pkgrel} BL31=bl31.elf ROCKCHIP_TPL=rk3576_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin
+  make EXTRAVERSION=-${pkgrel} BL31=bl31.elf ROCKCHIP_TPL=rk3576_ddr_lp4_2112MHz_lp5_2736MHz_v1.08.bin
 }
 
 package() {
