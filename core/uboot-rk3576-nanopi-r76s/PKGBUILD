@@ -4,8 +4,8 @@
 
 pkgname=uboot-rk3576-nanopi-r76s
 pkgver=2026.07rc4
-pkgrel=1
-_tfaver=2.14.0
+pkgrel=2
+_tfaver=2.15.0
 pkgdesc="U-Boot for FriendlyElec NanoPi R76S"
 arch=('aarch64')
 url='http://www.denx.de/wiki/U-Boot/WebHome'
@@ -22,7 +22,7 @@ source=("ftp://ftp.denx.de/pub/u-boot/u-boot-${pkgver/rc/-rc}.tar.bz2"
         'add-nanopi-r76s-support.patch'
 )
 sha256sums=('4f2af0828b4dad5ac22d151ba1a96faa766349900f224c66cf0ddf34cf7f4a41'
-            'd44936677a63c5216ffc151ae7711d458c992ef159a9df271fd9429f0a1cb5e5'
+            'ec4d6779225c5243a05dd190cd25c06ae79bec293afea780f0eb63541341a505'
             '7403cf1663d4b0c9d7c692014e0852e60f0d3977209ec75fa755c293f54e2d50'
             '34f875f6cc4fd2a633e08dcbe9f4f031ddf95a1bf6d5eaeb7621ac750d997cac'
             '39fc8d2f8d4af6630442cdbcb5d81c5f3927264d5f4a214b8571aae9561eeac2')
