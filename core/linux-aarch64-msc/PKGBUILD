@@ -8,7 +8,7 @@ pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=7.0.12
+pkgver=7.1
 pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
@@ -26,6 +26,7 @@ source=(
   '0001-general-fix-mmc-signal-voltage-before-reboot.patch'
   '0002-driver-power-meson64-reset.patch'
   '0003-board-odroid-sm1-reset.patch'
+  '0004-driver-power-meson64-reset-hc4.patch'
   '1000-arm64-dts-rockchip-Makefile.patch'
   'rk3399-enable-dwc3-xhci-usb-trb-quirk.patch'
   'rk3399-sd-drive-level-8ma.patch'
@@ -33,12 +34,13 @@ source=(
   'rk3399-unlock-temperature.patch'
   'rk3399-add-sclk-i2sout-src-clock.patch'
 )
-sha256sums=('57edc9a41efc1ca6b797afa8f4a587a30da2af6bca7356eb56e1e1a4ada265da'
-            '9805bf68915062b3ab0a8ef828197cefe1afec2fe73f21758891687adf196e9b'
+sha256sums=('691f44797fbe790dc8a321604c927087526ad27b6d649925d60f8eed0a2564a0'
+            '1947108cd7eb26bb9e25aa703092712b114fb5f82d05e22735d996e1ae6be45a'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
-            '2ea6f6b8b22cf76ef583c31e1ae3de9d9ae8e5f8c655fb011ff12dc5233172d5'
+            '343374b7b93441611336d67b67bc6daee8fcea4b0c7ba197d6dd4b9522322556'
             '1eb6cc0f5a656f7717356e75613eb49fa1f37379b5f6a8abc238da67a8a25e70'
+            '66b18e9666d42d800c55bdfe9ab6675ebf7398d6c29c0a99965cfb1405fa40a6'
             'b095ce02dfe8a2bf17ad4a4cc2b1b7bcaec5c42bf13a82acc92c51370fd62583'
             '43083eaf643995f414ee9d6463bb4ca3857d122e9e1a165c5f3ef0c2007fb2fe'
             '2d57b54f7d59969640e9c80e9f3e23230619fcd056d69995416f4781f6b3ae64'
@@ -53,6 +55,7 @@ prepare() {
   cat ../0001-general-fix-mmc-signal-voltage-before-reboot.patch | patch -p1
   cat ../0002-driver-power-meson64-reset.patch | patch -p1
   cat ../0003-board-odroid-sm1-reset.patch | patch -p1
+  cat ../0004-driver-power-meson64-reset-hc4.patch | patch -p1
 
   cat ../1000-arm64-dts-rockchip-Makefile.patch | patch -p1
   cat ../rk3399-enable-dwc3-xhci-usb-trb-quirk.patch | patch -p1
