@@ -3,8 +3,8 @@
 
 _desc="almost mainline but with MSC's patches, Rockchip and Amlogic"
 
-_rcver=7.1
-_rcrel=7
+_rcver=7.2
+_rcrel=1
 
 pkgbase=linux-aarch64-msc-rc
 pkgname=(
@@ -36,8 +36,8 @@ source=(
   'rk3399-unlock-temperature.patch'
   'rk3399-add-sclk-i2sout-src-clock.patch'
 )
-sha256sums=('f9ef2aba50622b36cd4decdd677c9c8cfe37c9caedabaf38db750959906ea17b'
-            '1947108cd7eb26bb9e25aa703092712b114fb5f82d05e22735d996e1ae6be45a'
+sha256sums=('b460e74cfa0a428416881063821ef6aae8a6a4c69891b9ab10fcf4edf770ce0d'
+            '0ba5c80174b64e5794a6a3706befb36025f6e89f03a014e075c14cd8a7e3185a'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '343374b7b93441611336d67b67bc6daee8fcea4b0c7ba197d6dd4b9522322556'
