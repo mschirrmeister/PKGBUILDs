@@ -3,8 +3,8 @@
 # Contributor: 
 
 pkgname=uboot-rk3576-nanopi-r76s
-pkgver=2026.07rc4
-pkgrel=2
+pkgver=2026.07rc5
+pkgrel=1
 _tfaver=2.15.0
 pkgdesc="U-Boot for FriendlyElec NanoPi R76S"
 arch=('aarch64')
@@ -21,11 +21,11 @@ source=("ftp://ftp.denx.de/pub/u-boot/u-boot-${pkgver/rc/-rc}.tar.bz2"
         "https://raw.githubusercontent.com/rockchip-linux/rkbin/cc3452e077f62a2e21e92fcc978d1b0ea19a1e33/bin/rk35/rk3576_bl31_v1.20.elf"
         'add-nanopi-r76s-support.patch'
 )
-sha256sums=('4f2af0828b4dad5ac22d151ba1a96faa766349900f224c66cf0ddf34cf7f4a41'
+sha256sums=('0f94e80b0330541280cd5b68f91172d4a5c294e697d7b144b3bda5609384acfa'
             'ec4d6779225c5243a05dd190cd25c06ae79bec293afea780f0eb63541341a505'
             '7403cf1663d4b0c9d7c692014e0852e60f0d3977209ec75fa755c293f54e2d50'
             '34f875f6cc4fd2a633e08dcbe9f4f031ddf95a1bf6d5eaeb7621ac750d997cac'
-            '39fc8d2f8d4af6630442cdbcb5d81c5f3927264d5f4a214b8571aae9561eeac2')
+            'b9c3be3b9b6784125d2c3e4c384edc8982f1f48ef0fcbe2142e605e856b08c1d')
 
 prepare() {
   cd u-boot-${pkgver/rc/-rc}
@@ -98,6 +98,18 @@ build() {
   update_config 'CONFIG_MMC_HS200_SUPPORT' 'y'
   update_config 'CONFIG_MMC_HS400_SUPPORT' 'y'
   update_config 'CONFIG_MMC_HS400_ES_SUPPORT' 'y'
+  # additional stuff after defconfig is in upstream
+  update_config 'CONFIG_CMD_ROCKUSB' 'y'
+  update_config 'CONFIG_CMD_USB_MASS_STORAGE' 'y'
+  update_config 'CONFIG_USB_GADGET' 'y'
+  update_config 'CONFIG_USB_GADGET_DOWNLOAD' 'y'
+  update_config 'CONFIG_USB_FUNCTION_ROCKUSB' 'y'
+  update_config 'CONFIG_PHY_REALTEK' 'y'
+  update_config 'CONFIG_DWC_ETH_QOS' 'y'
+  update_config 'CONFIG_DWC_ETH_QOS_ROCKCHIP' 'y'
+  update_config 'CONFIG_USB_FUNCTION_FASTBOOT' 'n'
+  update_config 'CONFIG_UDP_FUNCTION_FASTBOOT' 'n'
+  update_config 'CONFIG_TCP_FUNCTION_FASTBOOT' 'n'
   make olddefconfig
 
   # We don't use a pre-build version of the "bl31" file.
