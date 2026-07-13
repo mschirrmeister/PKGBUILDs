@@ -4,8 +4,8 @@
 
 pkgname=uboot-rk3588-rock-5b-plus
 pkgver=2026.07
-pkgrel=1
-_tfaver=2.14.0
+pkgrel=2
+_tfaver=2.15.0
 pkgdesc="U-Boot for Radxa Rock 5b+"
 arch=('aarch64')
 url='http://www.denx.de/wiki/U-Boot/WebHome'
@@ -23,7 +23,7 @@ source=("ftp://ftp.denx.de/pub/u-boot/u-boot-${pkgver/rc/-rc}.tar.bz2"
         '1003-v2-MAINTAINERS-Add-entry-for-Radxa-ROCK-5B.diff'
 )
 sha256sums=('78e8bfc382fe388f9b55aa1daf8c563522a037779b5d4c349d1415e381f1243e'
-            'd44936677a63c5216ffc151ae7711d458c992ef159a9df271fd9429f0a1cb5e5'
+            'ec4d6779225c5243a05dd190cd25c06ae79bec293afea780f0eb63541341a505'
             'e109f3e283c86ad74b6574f5538b11750dea4cab7668175717aa2af7994c28ef'
             '2847c82a44aff28f1923eea31567c9cf01a7c4bcec4d3b9be1cbf6fcc965f84b'
             '800600a54b71b07c6a5801391be0a34f3db3729c1e8ce338d2122336f7adb6e0'
