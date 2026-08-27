@@ -8,7 +8,7 @@ pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=6.18.46
+pkgver=6.18.47
 pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
@@ -34,8 +34,8 @@ source=(
   'rk3399-add-sclk-i2sout-src-clock.patch'
   '2000-Add-FriendlyElec-NanoPi-R76S.patch'
 )
-sha256sums=('f5d44b93808b02cc2969c5404ba081d97523719c9fd2ba2de6db318b4141cca0'
-            '93d50bc57592e1e2e1bcc375f1edc3393a3d59f475a3fc264fc613312684c23b'
+sha256sums=('1b3fbafd43601a5473107cf8172a2b66f42994119089d7aee078e4bca3dee818'
+            'f52315474d7e1be9ba5a45489c679d9013d72ff9817cc6efca7731357c12fb63'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
