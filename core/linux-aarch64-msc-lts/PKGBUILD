@@ -8,7 +8,7 @@ pkgname=(
   "${pkgbase}"
   "${pkgbase}-headers"
 )
-pkgver=6.18.64
+pkgver=6.18.65
 pkgrel=1
 arch=('aarch64')
 url="https://kernel.org"
@@ -26,7 +26,6 @@ source=(
   '0001-general-fix-mmc-signal-voltage-before-reboot.patch'
   '0002-driver-power-meson64-reset.patch'
   '0003-board-odroid-sm1-reset.patch'
-  '0004-tools-linux-types.h-Add-128-bit-integer-types-for-arm64.patch'
   '1000-arm64-dts-rockchip-Makefile.patch'
   'rk3399-enable-dwc3-xhci-usb-trb-quirk.patch'
   'rk3399-sd-drive-level-8ma.patch'
@@ -35,13 +34,12 @@ source=(
   'rk3399-add-sclk-i2sout-src-clock.patch'
   '2000-Add-FriendlyElec-NanoPi-R76S.patch'
 )
-sha256sums=('020d45510c539972e6f14c5c71566878d3b7ef56fb082b3e09134f2ebaade562'
-            '16c9cdeb9d4559ae632c8099af20f946b69ef6cad0e7a3d318e68163f91af545'
+sha256sums=('c92606f956f09dc50b5a0e2af9e86763fce27ada1647de97f8d1ac8cfc95801d'
+            'd406974251b19251865b8b598c7ae9df9fa332430f55f9a71815dbb5e0f52349'
             '0e51da441df45c246724343cd943fabbbe46ed8f38e38d78bb54fc0177e4ffbb'
             'a47010a1b4d730ee8205dfb9c2adf83db3829a9d57280fd6d6fee00fce84e365'
             '8fe15ad63aef62d98c59e8c60e797ffd2237096beb334e0a4f407db859754389'
             '1eb6cc0f5a656f7717356e75613eb49fa1f37379b5f6a8abc238da67a8a25e70'
-            '30b45a34e029aee8cd57123300a83ab1dfe473cb6c88d87ad1b3cccd891e0648'
             'b095ce02dfe8a2bf17ad4a4cc2b1b7bcaec5c42bf13a82acc92c51370fd62583'
             '43083eaf643995f414ee9d6463bb4ca3857d122e9e1a165c5f3ef0c2007fb2fe'
             '2d57b54f7d59969640e9c80e9f3e23230619fcd056d69995416f4781f6b3ae64'
@@ -57,7 +55,6 @@ prepare() {
   cat ../0001-general-fix-mmc-signal-voltage-before-reboot.patch | patch -p1
   cat ../0002-driver-power-meson64-reset.patch | patch -p1
   cat ../0003-board-odroid-sm1-reset.patch | patch -p1
-  cat ../0004-tools-linux-types.h-Add-128-bit-integer-types-for-arm64.patch | patch -p1
 
   cat ../1000-arm64-dts-rockchip-Makefile.patch | patch -p1
   cat ../rk3399-enable-dwc3-xhci-usb-trb-quirk.patch | patch -p1
